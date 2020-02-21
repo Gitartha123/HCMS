@@ -14,7 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::post('/viewdashboard','DashboardController@viewDashboard')->name('viewdashboard');
+//Route::post('/viewdashboard','DashboardController@viewDashboard')->name('viewdashboard');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::get('dropdownlist/getdesignation/{id}','DependentDropdown@getdesignation');

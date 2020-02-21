@@ -20,6 +20,8 @@
     </div>
 </div>
 
+<!--  LOGOUT BUTTON-->
+
 
 
 <!-- DESIGN FOR BODY -->
