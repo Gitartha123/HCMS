@@ -7,6 +7,27 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 <script src="public/js/DropdownForRegistration.js"></script>
+<script src="public/js/DateTimePicker.js"></script>
+<script src="public/js/jquery.validate.js"></script>
+<script src="public/js/ValidationForRegistration.js"></script>
+
+<style>
+    .mySlides {display:none;}
+    label.error
+    {
+        color: red;
+    }
+    </style>
+    <style>
+     .nounder
+     {
+         text-decoration:none;
+     }
+    .nounder:hover
+    {
+        color:#0C6;
+    }
+</style>
 <body  style="background-image: linear-gradient(to left,lightblue,white)">
 
 @include('HR.sidebar')
@@ -14,7 +35,7 @@
 
 <!-- INCLUDE EMPLOYEE REGISTRATION FORM -->
 
-@include('employee.registration')
+@include('employee.register')
 </body>
 
 

@@ -38,6 +38,13 @@
                 <ul class="navbar-nav ml-auto">
                     <!-- Authentication Links -->
                     @guest
+                        @if (Route::has('register'))
+                            <li class="nav-item">
+                                <a href="{{ route('register') }}"><button class="a1-btn a1-red"> {{ __('Register') }}</button></a>
+                            </li>
+                        @endif
+                    @else
+                        <h4 class="a1-margin"><b>Welcome {{ Auth::user()->name }}<br></b></h4>
                         <a  href="{{ route('logout') }}"
                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -52,6 +59,10 @@
             </div>
         </div>
     </nav>
+
+    <main class="py-4">
+        @yield('content')
+    </main>
 </div>
 </body>
 </html>

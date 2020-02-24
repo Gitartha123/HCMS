@@ -1,3 +1,4 @@
+@include('employee.register')
 @extends('layout')
 @section('body')
     <div class="w3-card-4 w3-padding w3-center" style="max-width: 600px;margin:auto auto; top:25%;left:15%;right:15%;position:absolute;" align="center">

@@ -19,3 +19,4 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('dropdownlist/getdesignation/{id}','DependentDropdown@getdesignation');
+Route::post('/registered','EmployeeRegistration@saveData')->name('employeeregistration');
