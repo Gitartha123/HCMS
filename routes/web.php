@@ -14,9 +14,14 @@
 Route::get('/', function () {
     return view('welcome');
 });
-//Route::post('/viewdashboard','DashboardController@viewDashboard')->name('viewdashboard');
-Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
-Route::get('dropdownlist/getdesignation/{id}','DependentDropdown@getdesignation');
-Route::post('/registered','EmployeeRegistration@saveData')->name('employeeregistration');
+
+
+Route::group(['middleware'=>'preventbackbutton'],function(){
+    Auth::routes();
+    Route::get('/home', 'HomeController@index')->name('home');
+
+    Route::get('dropdownlist/getdesignation/{id}','DependentDropdown@getdesignation');
+    Route::post('/registered','EmployeeRegistration@saveData')->name('employeeregistration');
+    Route::post('/home','EmployeeLogincontroller@login')->name('Employeelogin');
+});

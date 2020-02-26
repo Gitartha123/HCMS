@@ -29,12 +29,12 @@
     }
 </style>
 <body  style="background-image: linear-gradient(to left,lightblue,white)">
-
+@if(Session::has('message'))
+    <script>alert('{{ Session::get('message') }}')</script>
+    @endif
 @include('HR.sidebar')
 
-
 <!-- INCLUDE EMPLOYEE REGISTRATION FORM -->
-
 @include('employee.register')
 </body>
 
