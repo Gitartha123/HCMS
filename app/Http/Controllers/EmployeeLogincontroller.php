@@ -20,7 +20,7 @@ class EmployeeLogincontroller extends Controller
         }
         else {
             if (! $request->expectsJson()) {
-                Session::flash('message','Invalid userid or password !');
+                Session::flash('error','Invalid userid or password !');
                 return redirect()->back();
             }
         }

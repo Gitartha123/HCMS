@@ -5,6 +5,6 @@ $(function () {
 });
 $(function () {
     $('#joindate').datetimepicker({
-        format:'D-M-Y'
+        format: 'D-M-Y'
     });
 });

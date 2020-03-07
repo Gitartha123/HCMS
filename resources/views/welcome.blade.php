@@ -35,8 +35,8 @@
                             <div class="w3-rest">
                                 <input type="password" id="myInput" class="w3-input w3-border w3-round-xlarge form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password" placeholder="Please enter your password"style="max-width: 500px;">
                                 <span class="fa fa-fw fa-eye field-icon  w3-right  w3-xlarge" onclick="myFunction()" ></span>
-                                @if(Session::has('message'))
-                                    <h6 class="blink">{{ Session::get('message') }}</h6>
+                                @if(Session::has('error'))
+                                    <h6 class="blink">{{ Session::get('error') }}</h6>
                                 @endif
                             </div>
                         </div>

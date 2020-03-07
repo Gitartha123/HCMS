@@ -10,6 +10,9 @@
 <script src="public/js/DateTimePicker.js"></script>
 <script src="public/js/jquery.validate.js"></script>
 <script src="public/js/ValidationForRegistration.js"></script>
+<script src="public\js\confirmSubmit.js"></script>
+<link href="public/css/zoombutton.css" rel="stylesheet" type="text/css">
+
 
 <style>
     .mySlides {display:none;}
@@ -36,18 +39,10 @@
 
 <!-- INCLUDE EMPLOYEE REGISTRATION FORM -->
 @include('employee.register')
+
+<!-- INCLUDE VIEWEMPLOYEE -->
+@include('employee.viewemployee')
 </body>
 
 
-<script>
-    function EmployeeRegister(item){
-        var i;
-        var x = document.getElementsByClassName("item");
-        for (i = 0; i < x.length; i++) {
-            x[i].style.display = "none";
-        }
-        document.getElementById(item).style.display = "block";
-        document.getElementById('mySidebar').style.display = "none";
-
-    }
-</script>
+<script src="public/js/sidebar.js"></script>
