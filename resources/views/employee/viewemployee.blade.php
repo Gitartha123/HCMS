@@ -91,7 +91,7 @@
                 {
                     "data": null,
                     "render": function ( data, type, full, meta ) {
-                        return '<a href="action?email='+full.email+'&name='+full.name+'&dname='+full.dname+'" style="text-decoration: none" class="zoom w3-button w3-border w3-round w3-green w3-hover-red" >View</a>';
+                        return '<a href="action?email='+full.email+'&name='+full.name+'&dname='+full.dname+'" style="text-decoration: none" class="zoom w3-button w3-border w3-round w3-green w3-hover-red" ;">View</a>';
                     },
                 }
 

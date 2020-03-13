@@ -7,5 +7,7 @@ function EmployeeRegister(item){
     }
     document.getElementById(item).style.display = "block";
     document.getElementById('mySidebar').style.display = "none";
+    document.getElementById('action').style.display = "none";
 }
+
 

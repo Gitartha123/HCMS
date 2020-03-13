@@ -13,38 +13,7 @@
 <script src="public\js\confirmSubmit.js"></script>
 <link href="public/css/zoombutton.css" rel="stylesheet" type="text/css">
 
-
-<style>
-    .mySlides {display:none;}
-    label.error
-    {
-        color: red;
-    }
-    </style>
-    <style>
-     .nounder
-     {
-         text-decoration:none;
-     }
-    .nounder:hover
-    {
-        color:#0C6;
-    }
-</style>
-<body  style="background-image: linear-gradient(to left,lightblue,white)">
 <div id="dashboard">
-@if(Session::has('message'))
-    <script>alert('{{ Session::get('message') }}')</script>
-    @endif
-@include('HR.sidebar')
-@include('HR.body')
-<!-- INCLUDE EMPLOYEE REGISTRATION FORM -->
-@include('employee.register')
+@include('employee.employeeSidebar')
 
-<!-- INCLUDE VIEWEMPLOYEE -->
-@include('employee.viewemployee')
 </div>
-</body>
-
-
-<script src="public/js/sidebar.js"></script>

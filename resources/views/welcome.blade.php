@@ -19,6 +19,9 @@
             <div class="w3-panel w3-border w3-margin w3-padding w3-border-gray w3-round-xlarge ">
                 <strong style="color:black;font-size: 20px;" >LOGIN</strong>
             </div>
+            @if(Session::has('nopermit'))
+                <strong style="color: red">{{ Session::get('nopermit') }}</strong>
+                @endif
                     <form class="w3-container" method="post" action="{{ route('Employeelogin') }}">
                         <div class="w3-row w3-section">
                             <div class="w3-col" style="width:50px;">

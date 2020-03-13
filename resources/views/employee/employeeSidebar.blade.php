@@ -11,15 +11,14 @@
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
         @csrf
     </form>
+    <a href="#" class=" w3-bar-item " style="text-decoration: none;"><b class="w3-margin">Welcome {{ Auth::user()->fname }}</b></a>
 
-    <a href="{{ url('/home') }}" class=" w3-bar-item " style="text-decoration: none;" onclick="EmployeeRegister('dashboard')"><b><i class="w3-left fa fa-home  w3-xlarge w3-margin-right"></i> Home</b></a>
-
-    <div class="w3-bar-item w3-button" onclick="myAccFunc()"><i class="w3-left fa fa-user  w3-xlarge w3-margin-right"></i><b>Employee</b><i class="w3-right fa fa-caret-down"></i></div>
-    <div id="demoAcc" class="w3-hide w3-white w3-card-4">
-        <button class="w3-button w3-bar-item" onclick="EmployeeRegister('register')" id="reg">Employee Registration</button>
-        <button class="w3-button w3-bar-item" onclick="EmployeeRegister('viewemployee')">View Employee</button>
+    <a href="#" class=" w3-bar-item w3-green" style="text-decoration: none;" onclick="Dashboard()"><b><i class="w3-left fa fa-home  w3-xlarge w3-margin-right"></i> Home</b></a>
+    <div class="w3-center">
+        <img class="w3-button w3-circle w3-center" src="{{ 'storage/app/public/uploads/'.Auth::user()->photo }}" width="120px" height="100px">
     </div>
 
+    <a href="{{ route('myprofile') }}" class=" w3-bar-item w3-center " style="text-decoration: none;" ><b class="w3-margin">My Profile</b></a>
     <button class="w3-bar-item w3-button w3-hide-large" onclick="w3_close()">Close &times;</button>
 </div>
 
@@ -48,6 +47,11 @@
             x.previousElementSibling.className =
                 x.previousElementSibling.className.replace(" w3-green", "");
         }
+    }
+
+    function Dashboard(){
+        document.getElementById('profile').style.display = "none";
+        document.getElementById('dashboard').style.display = "block";
     }
 </script>
 

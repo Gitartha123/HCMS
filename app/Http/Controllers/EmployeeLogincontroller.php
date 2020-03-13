@@ -13,10 +13,22 @@ class EmployeeLogincontroller extends Controller
 {
 
     public function login(Request $request){
+
         $uname = $request->input('username');
         $password = $request->input('password');
         if (Auth::attempt(array('id' => $uname, 'password' => $password))){
-            return view('home',compact('token'));
+            if(Auth::user()->status == 1){
+                if(Auth::user()->dept==1) {
+                    return redirect()->route('home');
+                }
+                else{
+                    return redirect()->route('employee');
+                }
+            }
+            else{
+                Session::flash('nopermit','Ooops !! You are not permitted to log in ...');
+                return back();
+            }
         }
         else {
             if (! $request->expectsJson()) {

@@ -15,20 +15,33 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes(['verify'=>true]);
+
 Route::get('/action','ViewEmployee@Action')->name('action');
 Route::get('users', ['uses'=>'ViewEmployee@index', 'as'=>'users.index']);
 Route::post('/submission','EmployeeRecordSubmit@FinalSubmit')->name('submission');
 Route::get('/registered','EmployeeRecordSubmit@FinalSubmit')->name('employeeregistration');
 Route::post('/registered','EmployeeRegistration@saveData')->name('employeeregistration');
 Route::post('updatestatus','ViewEmployee@UpdateStatus')->name('action');
+Route::post('request','RequestController@sendRequest')->name('request');
+Route::get('/myprofile','EmployeePanel@myProfile')->name('myprofile');
+Route::get('/viewrequest2',['uses'=>'RequestController@viewRequest','as'=>'request.viewRequest']);
+Route::get('/ignore','RequestController@Ignore')->name('ignore');
+Route::get('/accept','RequestController@Accept')->name('accept');
 
 Route::group(['middleware'=>'preventbackbutton'],function(){
     Auth::routes();
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('dropdownlist/getdesignation/{id}','DependentDropdown@getdesignation');
     Route::post('/home','EmployeeLogincontroller@login')->name('Employeelogin');
+});
 
+Route::group(['middleware' => 'auth'],function(){
+   Auth::routes();
+   Route::get('/home',function (){
+      return view('home');
+   })->name('home');
 
-
+   Route::get('/employee',function (){
+      return view('employeeHome');
+   })->name('employee');
 });
