@@ -27,6 +27,9 @@ Route::get('/myprofile','EmployeePanel@myProfile')->name('myprofile');
 Route::get('/viewrequest2',['uses'=>'RequestController@viewRequest','as'=>'request.viewRequest']);
 Route::get('/ignore','RequestController@Ignore')->name('ignore');
 Route::get('/accept','RequestController@Accept')->name('accept');
+Route::get('/index','EmployeePanel@index')->name('body');
+Route::get('/response','RequestController@Response')->name('response');
+Route::post('/sendcontact','RequestController@sendContact')->name('sendcontact');
 
 Route::group(['middleware'=>'preventbackbutton'],function(){
     Auth::routes();

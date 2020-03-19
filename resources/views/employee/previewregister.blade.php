@@ -58,7 +58,7 @@
             <input type="hidden" name="desgid" value=" {{ Session::get('desg') }}">
             <input type="hidden" id="DEPT" value=" {{ Session::get('deptname') }}" >
             <input type="hidden"  id="DESG" value=" {{ Session::get('designationname') }}">
-            <input type="hidden"  id="IMG" value=" {{ Session::get('myfile') }}" name="IMG">
+            <input type="hidden"  id="IMG" value="{{ Session::get('myfile') }}" name="IMG">
             <input type="hidden"  id="sign" value=" {{ Session::get('sign') }}" name="sign">
             <input type="hidden" name="id" value="{{ Session::get('id') }}" id="id">
             <div class="w3-center w3-gray w3-border w3-round  w3-padding"><strong>PERSONAL RECORDS</strong></div>

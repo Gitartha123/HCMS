@@ -56,10 +56,17 @@
     $(function () {
 
         var table = $('.data-table').DataTable({
+            "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
+                if ( aData['count'] == 0 )
+                {
+                    $('td', nRow).css('background-color', 'red');
+                }
+            },
             processing: true,
             serverSide: true,
+            order: [ [0, 'desc'] ],
             columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                {data: 'DT_RowIndex', name: 'DT_RowIndex' },
                 {data: 'uid',name:'uid'},
                 {
                     "data" : 'fname',
@@ -87,7 +94,7 @@
                             return item;
                         }
                         else if (row.item == 3){
-                            status = "Both Email and Phone number";
+                            item = "Both Email and Phone number";
                             return item;
                         }
                     },

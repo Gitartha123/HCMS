@@ -15,9 +15,14 @@
        <div class="w3-row w3-row-padding w3-margin">
            <div class="w3-quarter">
                <div class="w3-card-4 w3-round w3-padding zoom"; style="background-color: #00CC66;height: 100px;">
-                       <i class="w3-xxxlarge fa fa-user" style="opacity: .5"></i>
+                   <a style="text-decoration: none; " href="{{ url('viewrequest2') }}">
+                       <i class="w3-xxxlarge fa fa-user" style="color: white"></i>
                        <br><strong class="w3-margin" style="color:white">EMPLOYEE REQUESTS</strong>
-                       <a style="text-decoration: none;" class="w3-card w3-button w3-blue w3-right w3-round w3-small w3-padding w3-hover-red" href="{{ url('viewrequest2') }}">VIEW</a>
+                       @php
+                            $count =DB::table('request')->where('count','=',0)->count();
+                               @endphp
+                       <span  class="w3-card w3-blue w3-right w3-large w3-padding  w3-circle"><i class="fa fa-bell w3-xlarge" style="transform: rotate(45deg)"></i>{{ $count }}</span>
+                   </a>
                </div>
            </div>
            <div class="w3-quarter">

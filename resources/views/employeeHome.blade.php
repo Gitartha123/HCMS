@@ -15,5 +15,5 @@
 
 <div id="dashboard">
 @include('employee.employeeSidebar')
-
+@include('employee.body')
 </div>

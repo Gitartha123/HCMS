@@ -13,7 +13,7 @@
     </form>
     <a href="#" class=" w3-bar-item " style="text-decoration: none;"><b class="w3-margin">Welcome {{ Auth::user()->fname }}</b></a>
 
-    <a href="#" class=" w3-bar-item w3-green" style="text-decoration: none;" onclick="Dashboard()"><b><i class="w3-left fa fa-home  w3-xlarge w3-margin-right"></i> Home</b></a>
+    <a href="{{ route('body') }}" class=" w3-bar-item w3-green" style="text-decoration: none;" onclick="Dashboard()"><b><i class="w3-left fa fa-home  w3-xlarge w3-margin-right"></i> Home</b></a>
     <div class="w3-center">
         <img class="w3-button w3-circle w3-center" src="{{ 'storage/app/public/uploads/'.Auth::user()->photo }}" width="120px" height="100px">
     </div>
