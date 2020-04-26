@@ -17,9 +17,9 @@
                 <div class="w3-card-4 w3-round w3-padding zoom"; style="background-color: #00CC66;height: 100px;">
                     <a style="text-decoration: none; " href="{{ route('response') }}" onclick="document.getElementById('id01').style.display ='block'">
                         <i class="w3-xxxlarge fa fa-user" style="color: white"></i>
-                        <br><strong class="w3-margin" style="color:white;font-size: 18px">MY REQUESTS</strong>
+                        <br><strong class="w3-margin" style="color:white;font-size: 15px">APPROVAL REQUESTS</strong>
                         @php
-                            $count =DB::table('request')->where('count','=',1)->where('uid','=',Auth::user()->id)->count();
+                            $count =DB::table('request')->where('count','=',3)->where('uid','=',Auth::user()->id)->count();
                         @endphp
                         <span  class="w3-card w3-blue w3-right w3-large w3-padding  w3-circle"><i class="fa fa-bell w3-xlarge" style="transform: rotate(45deg)"></i>{{ $count }}</span>
                     </a>

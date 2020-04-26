@@ -13,7 +13,7 @@
 <script src="public\js\confirmSubmit.js"></script>
 <link href="public/css/zoombutton.css" rel="stylesheet" type="text/css">
 
-@include('HR.sidebar')
+@include('employee.employeeSidebar')
 <style>
     @media screen and (min-width: 992px) {
         .topnav {
@@ -34,15 +34,16 @@
     <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium w3-light-gray w3-margin">
         <div class="table-responsive">
             <div class="w3-panel w3-border  w3-padding w3-border-gray w3-round-xlarge w3-center">
-                <strong style="color:black;font-size: 20px;">EMPLOYEE REQUESTS</strong>
+                <strong style="color:black;font-size: 20px;">MY REQUESTS</strong>
             </div>
             <table class="table w3-table-all w3-border w3-round w3-hoverable  data-table" width="100%">
                 <thead>
                 <tr class="w3-green">
                     <th>Sl No.</th>
-                    <th>User Id</th>
-                    <th>Name</th>
-                    <th>Requested field to be updated</th>
+                    <th>Request Date :</th>
+                    <th>Requested field </th>
+                    <th>Requested phone number</th>
+                    <th>Requested email id</th>
                     <th width="100px"></th>
                 </tr>
                 </thead>
@@ -57,31 +58,18 @@
 
         var table = $('.data-table').DataTable({
             "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
-                if ( aData['count'] == 0 )
+                if ( aData['count'] == 3 )
                 {
-                    $('td', nRow).css('background-color', '#7fffd4');
+                    $('td', nRow).css('background-color', 'blue');
                 }
             },
             processing: true,
             serverSide: true,
             order: [ [0, 'desc'] ],
+
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex' },
-                {data: 'uid',name:'uid'},
-                {
-                    "data" : 'fname',
-                    render: function(data, type, row) {
-                        if (row.mname != null) {
-                            var name = row.fname + " " + row.mname + " " + row.lname;
-                            return name;
-                        }
-                        else{
-                            return row.fname + " " + row.lname;
-                        }
-                    },
-
-                },
-
+                {data: 'created_at',name:'updated_at'},
                 {
                     "data" : 'item',
                     render : function (data,type,row) {
@@ -100,21 +88,22 @@
                     },
 
                 },
+                {data : 'phone', name: 'phone'},
+                {data: 'mail', name : 'mail'},
                 {
-                    "data": null,
-                    "render": function ( data, type, full, meta ) {
-                        if (full.rstatus == 0) {
-                            return '<a href="viewedit?email='+full.mail+'&phone='+full.phone+'&uid='+full.uid+'" style="text-decoration: none" class="zoom w3-button w3-border w3-round w3-green w3-hover-red" ;">View</a>';
+                    "data" : 'rstatus',
+                    render : function (data,type,row) {
+                        if (row.rstatus == 0 ) {
+                            return "Pending";
                         }
-                        else if(full.rstatus == 1){
-                            return "Ignored";
+                        else if (row.rstatus == 1){
+                            return "Rejected";
                         }
-                        else if(full.rstatus == 2){
-                            return "Accepted";
+                        else if (row.rstatus == 2){
+                            return "Your requested fields are successfully updated";
                         }
                     },
                 }
-
             ]
         });
 

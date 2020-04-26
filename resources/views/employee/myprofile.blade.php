@@ -137,21 +137,27 @@
 
             <div class="w3-center w3-gray w3-border w3-round  w3-padding"><strong>REQUEST FOR UPDATING CONTACT DETAILS</strong></div>
             <div class="w3-row w3-row-padding w3-margin w3-border w3-border-blue-grey" >
-                <div class="w3-quarter">
-                    <label class="w3-margin"> <strong>Choose option : </strong></label>
+                    <div class="w3-quarter">
+                        <label class="w3-margin"> <strong>Choose option : </strong></label>
+                    </div>
+                    <div class="w3-quarter">
+                        <input type="radio" name="phone" value="1" class="w3-margin"  id="ph" onclick="getcontact()">Phone number
+                    </div>
+                    <div class="w3-quarter">
+                        <input type="radio" name="email" value="2" class="w3-margin"  id="e" onclick="getcontact()">Email
+                    </div>
+                @if(Session::has('radio'))
+                     <span class="w3-center"><strong style="color: red">{{ Session::get('radio') }}</strong></span>
+                    @endif
+            </div>
+
+            <div class="w3-row w3-row-padding w3-margin w3-border w3-border-blue-grey">
+                <div class="w3-half" >
+                   <input type="text" name="phone" class="w3-input w3-margin w3-margin-right" id="phone" style="display: none;" placeholder="Enter Phone number" required disabled>
                 </div>
-                <div class="w3-quarter">
-                    <input type="radio" name="contact" value="1" class="w3-margin" required>Phone number
+                <div class="w3-half">
+                    <input type="email"  name="email" class="w3-input w3-margin w3-margin-right" placeholder="Enter email" id="email" style="display: none" required disabled>
                 </div>
-                <div class="w3-quarter">
-                    <input type="radio" name="contact" value="2" class="w3-margin" required>Email
-                </div>
-                <div class="w3-quarter">
-                    <input type="radio" name="contact" value="3" class="w3-margin" required>Both
-                </div>
-                @foreach($errors->all() as  $error)
-                    <strong style="color: red;">{{ $error }}</strong>
-                    @endforeach
             </div>
 
             <div class="w3-row w3-center">
@@ -173,6 +179,37 @@
             return false;
         }
     }
+
+
+    $('#ph').click(function() {
+        var checked = $(this).attr('checked');
+        if(checked){
+            $(this).attr('checked', false);
+            document.getElementById('phone').style.display = "none";
+            document.getElementById('phone').disabled = true;
+        }
+        else{
+            $(this).attr('checked', true);
+            document.getElementById('phone').style.display ="block";
+            document.getElementById('phone').disabled = false;
+        }
+    });
+
+    $('#e').click(function() {
+        var checked = $(this).attr('checked');
+        if(checked){
+            $(this).attr('checked', false);
+            document.getElementById('email').style.display = "none";
+            document.getElementById('email').disabled = true;
+        }
+        else{
+            $(this).attr('checked', true);
+            document.getElementById('email').style.display ="block";
+            document.getElementById('email').disabled = false;
+
+        }
+    });
+
 </script>
 
 

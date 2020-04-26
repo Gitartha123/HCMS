@@ -30,6 +30,9 @@ Route::get('/accept','RequestController@Accept')->name('accept');
 Route::get('/index','EmployeePanel@index')->name('body');
 Route::get('/response','RequestController@Response')->name('response');
 Route::post('/sendcontact','RequestController@sendContact')->name('sendcontact');
+Route::get('/viewedit','Requestcontroller@viewEdit')->name('viewedit');
+Route::get('/applyleave','LeaveController@applyLeave')->name('apply');
+
 
 Route::group(['middleware'=>'preventbackbutton'],function(){
     Auth::routes();
