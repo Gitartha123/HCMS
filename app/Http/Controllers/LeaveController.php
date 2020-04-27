@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class LeaveController extends Controller
 {
     public function applyLeave(Request $request){
+        $getholiday = DB::table('holiday')->pluck('date');
         $getplamount = DB::table('leave')
             ->where('type','=','pl')
             ->value('lamount');
@@ -29,6 +30,6 @@ class LeaveController extends Controller
 
 
 
-        return view('employee.leaveapply',compact('getclamount'),compact('getplamount'))->with('plcount',$plcount)->with('clcount',$clcount);
+        return view('employee.leaveapply',compact('getclamount'),compact('getplamount'))->with('plcount',$plcount)->with('clcount',$clcount)->with('holiday',$getholiday);
     }
 }

@@ -62,6 +62,9 @@
         </div>
         <form  method="post" action="{{ route('employeeregistration') }}" id="form1" enctype="multipart/form-data" onsubmit="return Validate(this);" onmouseover="if( document.getElementById('leavetype').value == 2){getDays()} else if(document.getElementById('leavetype').value == 1){Paid()}">
             @csrf
+
+                <input type="hidden" id="holiday" name="holiday[]" value = "{{ $holiday }}">
+
             <div class="w3-row" >
                 <div class="w3-half">
                     <div class="w3-container w3-padding" >
@@ -164,6 +167,31 @@
         $('[data-toggle = "tooltip"]').tooltip()
     })
 
+    var holiday = [];
+    var arrayable = [];
+    jQuery.ajax(
+        {
+            url : 'http://localhost/HCMS/api/getholiday',
+            type : "GET",
+            dataType : "json",
+
+            success : function (response) {
+
+                for(var i=0;i< response.data.length;i++){
+                    var d = new Date(response.data[i].date);
+                    holiday.push(response.data[i].date);
+                    var date = d.getDate();
+                    var year = d.getFullYear();
+                    var month= d.getMonth();
+                    var title = response.data[i].title;
+                    arrayable.push([year,month,date,title]);
+                }
+                console.log(holiday);
+                console.log(arrayable);
+            }
+        }
+    )
+
    $('#leavetype').change(function(){
         switch(parseInt(jQuery(this).val())){
             case 2 :
@@ -195,13 +223,12 @@
         }
    });
 
-    var arrayable = [[2020,8,24,'Independence Day'],[2020,8,27,'Pongal']];
-    var holiday = ['2020-08-24','2020-08-27'];
+
     var p = document.getElementById('leavetype').value
     function disableSpecificDates(date){
         for (i = 0; i < arrayable.length; i++) {
             if (date.getFullYear() == arrayable[i][0]
-                && date.getMonth() == arrayable[i][1] - 1
+                && date.getMonth() == arrayable[i][1]
                 && date.getDate() == arrayable[i][2]) {
                 return [false, 'holiday red', arrayable[i][3]];
             }
@@ -212,9 +239,7 @@
     }
 
 
-
     function getDays(){
-
         var start   = $('#txtDate1').datepicker('getDate');
         var end = $('#txtDate2').datepicker('getDate');
         var totalBusinessDays = 0;
