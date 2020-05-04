@@ -60,10 +60,10 @@
         <div class="w3-panel w3-border  w3-padding w3-border-gray w3-round-xlarge w3-center">
             <strong style="color:black;font-size: 20px;">APPLY LEAVE</strong>
         </div>
-        <form  method="post" action="{{ route('employeeregistration') }}" id="form1" enctype="multipart/form-data" onsubmit="return Validate(this);" onmouseover="if( document.getElementById('leavetype').value == 2){getDays()} else if(document.getElementById('leavetype').value == 1){Paid()}">
+        <form  method="post" action="{{ route('applyLeave') }}" id="form1" enctype="multipart/form-data" onsubmit="return Validate(this);" onmouseover="getDays()">
             @csrf
 
-                <input type="hidden" id="holiday" name="holiday[]" value = "{{ $holiday }}">
+                <input type="hidden" id="userid" name="userid" value = "{{ Auth::user()->id }}">
 
             <div class="w3-row" >
                 <div class="w3-half">
@@ -102,6 +102,20 @@
                 </div>
 
                 <div class="w3-half">
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    @if (Session::has('message'))
+                            <div class="alert alert-danger">
+                               {{ Session::get('message') }}
+                            </div>
+                        @endif
                     <div class="w3-card w3-padding">
                         <select name="leavetype" id="leavetype" class="w3-input w3-border w3-round-xlarge"  >
                             <option disabled selected id="leavetype">Select Leave Type</option>
@@ -116,19 +130,19 @@
 
                         <p></p>
                         <input type="text" class="w3-input w3-border w3-round" placeholder="Duration" id="duration"readonly >
-
+                        <input type="hidden" class="w3-input w3-border w3-round" placeholder="Duration" id="d"readonly name="duration">
                         <p></p>
 
                         <select name="reason" id="reason" class="w3-input w3-border w3-round-xlarge" onclick="getReason()">
                             <option disabled selected id="reason">Select Reason for leave</option>
-                            <option >Medical Purpose</option>
-                            <option>Ocassion</option>
+                            <option value="1">Medical Purpose</option>
+                            <option value="2">Ocassion</option>
                             <option value="3">Others</option>
                         </select>
 
                         <p></p>
 
-                        <textarea class="w3-input w3-border w3-round w3-animate-top" style="height: 200px; display: none" placeholder="Reason for leave*" id="r"></textarea>
+                        <textarea class="w3-input w3-border w3-round w3-animate-top" style="height: 200px; display: none" placeholder="Reason for leave*" id="r" name="reasonbox"></textarea>
 
                         <p></p>
                         <label class="w3-margin">Supporting Document</label>
@@ -193,38 +207,21 @@
     )
 
    $('#leavetype').change(function(){
-        switch(parseInt(jQuery(this).val())){
-            case 2 :
+
                 document.getElementById('txtDate1').value = null
                 document.getElementById('txtDate2').value = null
                 document.getElementById('duration').value = null
-                $("#txtDate1,#txtDate2").datepicker("destroy");
+
             $('#txtDate1, #txtDate2').datepicker({
                 minDate :0,
                 dateFormat: 'yy-mm-dd',
                 beforeShowDay:  disableSpecificDates
             })
-                $( "#txtDate1,#txtDate2" ).datepicker("refresh");
-            break;
-            case 1:
-                document.getElementById('txtDate1').value = null
-                document.getElementById('txtDate2').value = null
-                document.getElementById('duration').value = null
-                $("#txtDate1,#txtDate2").datepicker("destroy");
-                $('#txtDate1,#txtDate2').datepicker({
-                    minDate : 0,
-                    dateFormat: "yy-mm-dd",
-                })
-                $( "#txtDate1,#txtDate2" ).datepicker("refresh");
-            break;
-            default :
-                alert('select leave type');
-                break;
-        }
+
    });
 
 
-    var p = document.getElementById('leavetype').value
+
     function disableSpecificDates(date){
         for (i = 0; i < arrayable.length; i++) {
             if (date.getFullYear() == arrayable[i][0]
@@ -268,33 +265,11 @@
         }
         else {
             document.getElementById('duration').value = y
+            document.getElementById('d').value = days
         }
     }
 
 
-    function Paid(){
-        var date1 = new Date(document.getElementById('txtDate1').value)
-        var date2 = new Date(document.getElementById('txtDate2').value)
-
-        if(! isNaN(date1) && ! isNaN(date2)){
-
-            // To calculate the time difference of two dates
-            var Difference_In_Time = date2.getTime() - date1.getTime();
-
-            // To calculate the no. of days between two dates
-            var x = " "+"Days"
-            var days = (Difference_In_Time / (1000 * 3600 * 24))+1
-            var y = days+x;
-            if(days <= 0){
-                document.getElementById('txtDate1').value = null
-                document.getElementById('txtDate2').value = null
-                document.getElementById('duration').value = null
-            }
-            else {
-                document.getElementById('duration').value = y
-            }
-        }
-    }
 
 </script>
 <script>

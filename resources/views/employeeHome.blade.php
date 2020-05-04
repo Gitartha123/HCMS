@@ -15,5 +15,8 @@
 
 <div id="dashboard">
 @include('employee.employeeSidebar')
+    @if(Session::has('message'))
+        <script>alert("{{ Session::get('message') }}")</script>
+        @endif
 @include('employee.body')
 </div>

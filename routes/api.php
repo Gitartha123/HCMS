@@ -14,4 +14,7 @@ use Illuminate\Http\Request;
 */
 Route::post('login','Api\LoginController@login');
 Route::get('getholiday','Api\GetHolidays@getHolidays');
+Route::post('applyLeave','Api\RequestLeave@submitRequest');
+
+
 

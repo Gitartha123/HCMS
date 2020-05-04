@@ -13,4 +13,5 @@ class EmployeePanel extends Controller
     public function index(){
         return view('employeeHome');
     }
+
 }
