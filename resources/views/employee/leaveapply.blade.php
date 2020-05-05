@@ -60,9 +60,15 @@
         <div class="w3-panel w3-border  w3-padding w3-border-gray w3-round-xlarge w3-center">
             <strong style="color:black;font-size: 20px;">APPLY LEAVE</strong>
         </div>
-        <form  method="post" action="{{ route('applyLeave') }}" id="form1" enctype="multipart/form-data" onsubmit="return Validate(this);" onmouseover="getDays()">
+        <form  method="post" action="{{ route('applyLeave') }}" id="form1" enctype="multipart/form-data" onsubmit="return checkAvailivility()" onmouseover="getDays()">
             @csrf
 
+                <!-- Approved no of casual leave -->    <input type="hidden" id="totclcount" value="{{ $clcount }}">
+                <!-- Approved no of paid leave -->     <input type="hidden" id="totplcount" value="{{ $plcount }}">
+                <!-- Total no of  paid leave in a year -->  <input type="hidden" id="getplamount" value="{{ $getplamount }}">
+                <!-- Total no of casual leave in a year-->  <input type="hidden" id="getclamount" value="{{ $getclamount }}">
+                <!-- All/Approve,Pending no of casual leave --> <input type="hidden" id="CLcount" value="{{ $CLcount }}">
+                <!-- All/Approve,Pending no of Paid leave --><input type="hidden" id="PLcount" value="{{ $PLcount }}">
                 <input type="hidden" id="userid" name="userid" value = "{{ Auth::user()->id }}">
 
             <div class="w3-row" >
@@ -211,9 +217,10 @@
                 document.getElementById('txtDate1').value = null
                 document.getElementById('txtDate2').value = null
                 document.getElementById('duration').value = null
-
+                var year = (new Date).getFullYear();
             $('#txtDate1, #txtDate2').datepicker({
-                minDate :0,
+                minDate: 0,
+                maxDate: new Date(year, 11, 31),
                 dateFormat: 'yy-mm-dd',
                 beforeShowDay:  disableSpecificDates
             })
@@ -284,7 +291,48 @@
     }
 </script>
 
-
+<script>
+    function checkAvailivility(){
+        var a = document.getElementById('leavetype').value
+        var b = document.getElementById('getclamount').value
+        var c = document.getElementById('getplamount').value
+        var x = document.getElementById('CLcount').value
+        var z = document.getElementById('PLcount').value
+        var y = document.getElementById('d').value
+        if(a == 2){
+            q = parseInt(x)+parseInt(y);
+            if(parseInt(y) < parseInt(b)){
+                if(q > parseInt(b)){
+                    alert('You have only'+(parseInt(b)-parseInt(x))+" "+'days for casual leave');
+                    return  false;
+                }
+                else if(q <= parseInt(b)) {
+                    return true;
+                }
+            }
+            else if (parseInt(y) > parseInt(b)){
+                alert('You are not permitted to take more than '+b+" "+'days in casual leave');
+                return false;
+            }
+        }
+        else if(a == 1){
+            p = parseInt(z)+parseInt(y);
+            if(parseInt(y) < parseInt(c)){
+                if(p > parseInt(c)){
+                    alert('You have only'+(parseInt(c)-parseInt(z))+" "+'days for paid leave');
+                    return  false;
+                }
+                else if(p <= parseInt(c)) {
+                    return true;
+                }
+            }
+            else if (parseInt(y) > parseInt(c)){
+                alert('You are not permitted to take more than '+c+" "+'days in paid leave');
+                return false;
+            }
+        }
+    }
+</script>
 
 
 

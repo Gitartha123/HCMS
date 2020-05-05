@@ -13,6 +13,7 @@ use Session;
 class LeaveController extends Controller
 {
     public function applyLeave(Request $request){
+        $year = date('Y');
         $getholiday = DB::table('holiday')->pluck('date');
         $getplamount = DB::table('leave')
             ->where('type','=',1)
@@ -22,19 +23,60 @@ class LeaveController extends Controller
             ->where('type','=',2)
             ->value('lamount');
 
+
+        //extract approved applied number of paid leave to visualize to the employee
+
+        $count1 = 0;
         $plcount = DB::table('employeeleave')
             ->where('empid','=',Auth::user()->id)
+            ->whereYear('fromdate','=',$year)
             ->where('type','=',1)
-            ->count();
+            ->where('status','=',1)
+            ->pluck('duration');
+        foreach ($plcount as $pl){
+            $count1 = $count1 + $pl;
+        }
 
+        //extract approved applied number of casual  leave to visualize to the employee
+
+        $count2 = 0;
         $clcount = DB::table('employeeleave')
             ->where('empid','=',Auth::user()->id)
+            ->whereYear('fromdate','=',$year)
             ->where('type','=',2)
-            ->count();
+            ->where('status','=',1)
+            ->pluck('duration');
+        foreach($clcount as $c){
+            $count2 = $count2 + $c;
+        }
 
 
+        //extract all(approved/not approved) applied number of casual leave
 
-        return view('employee.leaveapply',compact('getclamount'),compact('getplamount'))->with('plcount',$plcount)->with('clcount',$clcount)->with('holiday',$getholiday);
+        $CLcount = 0;
+        $CL = DB::table('employeeleave')
+            ->where('empid','=',Auth::user()->id)
+            ->whereYear('fromdate','=',$year)
+            ->where('type','=',2)
+            ->pluck('duration');
+        foreach($CL as $c){
+            $CLcount = $CLcount + $c;
+        }
+
+
+        //extract all(approved/not approved) applied number of casual leave
+
+        $PLcount = 0;
+        $PL = DB::table('employeeleave')
+            ->where('empid','=',Auth::user()->id)
+            ->whereYear('fromdate','=',$year)
+            ->where('type','=',1)
+            ->pluck('duration');
+        foreach($PL as $c){
+            $PLcount = $PLcount + $c;
+        }
+
+        return view('employee.leaveapply',compact('getclamount'),compact('getplamount'))->with('PLcount',$PLcount)->with('CLcount',$CLcount)->with('plcount',$count1)->with('clcount',$count2)->with('holiday',$getholiday);
     }
 
     public function submitRequest(Request $request){
@@ -60,6 +102,7 @@ class LeaveController extends Controller
         $getYearTodate = date('Y',strtotime($todate));
         $getMonthTodate = date('m',strtotime($todate));
 
+
         $count = 0;
         $getDurationPerMonth = DB::table('employeeleave')
             ->whereYear('fromdate','=',$getYearFromdate)
@@ -72,25 +115,37 @@ class LeaveController extends Controller
         $c = $count+$duration;
 
        if($leavetype == 2){
-           if($getMonthFromdate == $getMonthTodate){
-               if ($duration > 2){
-                   Session::flash('message','You are not permitted to take casual leave more than two days per month');
-                   return redirect()->back();
-               }
-               elseif($duration <=2){
-                   if($c > 2 ) {
-                       Session::flash('message','Sorry !! You have no more leave in applied month');
+               if($getMonthFromdate == $getMonthTodate){
+                   if ($duration > 2){
+                       Session::flash('message','You are not permitted to take casual leave more than two days per month');
                        return redirect()->back();
                    }
+                   elseif($duration < 2){
+                       if($c > 2 ) {
+                           Session::flash('message','Sorry !! You have no more casual leave in applied month');
+                           return redirect()->back();
+                       }
+                   }
+                   elseif($duration == 2){
+                       if($count >= 2 ) {
+                           Session::flash('message','Sorry !! You have no more casual leave in applied month');
+                           return redirect()->back();
+                       }
+                       if($count == 1 ) {
+                           Session::flash('message','You have only one day to apply casual leave in this month,please choose only one date');
+                           return redirect()->back();
+                       }
+                   }
+               }
+               else{
+
+                   Session::flash('message','Sorry !! You cannot apply casual leave for two consecutive month ');
+                   return redirect()->back();
+
                }
            }
-           else{
 
-               Session::flash('message','Sorry !! You cannot apply casual leave for two consecutive month ');
-               return redirect()->back();
 
-           }
-       }
 
         $data = new Leave();
         $data->type =  $leavetype;
