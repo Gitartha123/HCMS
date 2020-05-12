@@ -32,8 +32,8 @@ Route::get('/response','RequestController@Response')->name('response');
 Route::post('/sendcontact','RequestController@sendContact')->name('sendcontact');
 Route::get('/viewedit','Requestcontroller@viewEdit')->name('viewedit');
 Route::get('/applyleave','LeaveController@applyLeave')->name('apply');
-Route::post('applyLeave','LeaveController@submitRequest')->name('applyLeave');
-
+Route::post('leave','LeaveController@submitRequest')->name('applyLeave');
+Route::get('/requested','LeaveController@status')->name('leave');
 
 Route::group(['middleware'=>'preventbackbutton'],function(){
     Auth::routes();

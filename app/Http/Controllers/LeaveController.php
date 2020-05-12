@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
 use Session;
+use Yajra\DataTables\DataTables;
 
 class LeaveController extends Controller
 {
@@ -143,7 +144,7 @@ class LeaveController extends Controller
                    return redirect()->back();
 
                }
-           }
+       }
 
 
 
@@ -159,12 +160,22 @@ class LeaveController extends Controller
 
             if ($data->save()){
                 Session::flash('message','Your request has been sent');
-                return  redirect()->action('EmployeePanel@index');
+                return redirect()->action('LeaveController@status');
             }
             else{
                 return ['message' => 'fail',
                 ];
             }
-        }
+    }
+    public function  status(Request $request ){
 
+        if($request->ajax()){
+            $item = DB::table('employeeleave')
+                ->where('empid','=',Auth::user()->id)
+                ->get();
+            return DataTables::of($item)->addIndexColumn()->addColumn('action',function ($row){
+            })->rawColumns(['action'])->make(true);
+        }
+        return view('employee.leavestatus');
+    }
 }

@@ -314,6 +314,15 @@
                 alert('You are not permitted to take more than '+b+" "+'days in casual leave');
                 return false;
             }
+            else if(parseInt(y) == parseInt(b)){
+                if(q > parseInt(b)){
+                    alert('You have only'+(parseInt(b)-parseInt(x))+" "+'days for paid leave');
+                    return  false;
+                }
+                else if(q <= parseInt(b)){
+                    return  true;
+                }
+            }
         }
         else if(a == 1){
             p = parseInt(z)+parseInt(y);
@@ -329,6 +338,15 @@
             else if (parseInt(y) > parseInt(c)){
                 alert('You are not permitted to take more than '+c+" "+'days in paid leave');
                 return false;
+            }
+            else if(parseInt(y) == parseInt(c)){
+                if(p > parseInt(c)){
+                    alert('You have only'+(parseInt(c)-parseInt(z))+" "+'days for paid leave');
+                    return  false;
+                }
+                else if(p <= parseInt(c)){
+                    return  true;
+                }
             }
         }
     }
