@@ -34,7 +34,14 @@ Route::get('/viewedit','Requestcontroller@viewEdit')->name('viewedit');
 Route::get('/applyleave','LeaveController@applyLeave')->name('apply');
 Route::post('leave','LeaveController@submitRequest')->name('applyLeave');
 Route::get('/requested','LeaveController@status')->name('leave');
+Route::get('/editleave','LeaveController@editLeave')->name('editleave');
+Route::post('/update','LeaveController@UpdateLeave')->name('editapplyLeave');
+Route::get('/deleteleave','LeaveController@deleteLeave')->name('deleteleave');
+Route::get('/employeeleaverequest','LeaveController@showLeave');
 
+Route::get('/status',function (){
+    return view('employee.leavestatus');
+})->name('status');
 Route::group(['middleware'=>'preventbackbutton'],function(){
     Auth::routes();
     Route::get('/home', 'HomeController@index')->name('home');

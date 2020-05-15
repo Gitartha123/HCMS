@@ -55,22 +55,22 @@
 </style>
 
 <script src="public/js/photovalidation.js"></script>
-<div class="w3-card-4 w3-padding  w3-animate-zoom  item topnav">
+<div class="w3-card-4 w3-padding  w3-animate-zoom  item topnav" onmouseover="getReason()">
     <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium w3-light-gray">
         <div class="w3-panel w3-border  w3-padding w3-border-gray w3-round-xlarge w3-center">
             <strong style="color:black;font-size: 20px;">APPLY LEAVE</strong>
         </div>
-        <form  method="post" action="{{ route('applyLeave') }}" id="form1" enctype="multipart/form-data" onsubmit="return checkAvailivility()" onmouseover="getDays()">
-            @csrf
+        <form  method="post" action="{{ route('editapplyLeave') }}" id="form1" enctype="multipart/form-data" onsubmit="return checkAvailivility()" onmouseover="getDays()">
+        @csrf
 
-                <!-- Approved no of casual leave -->    <input type="hidden" id="totclcount" value="{{ $clcount }}">
-                <!-- Approved no of paid leave -->     <input type="hidden" id="totplcount" value="{{ $plcount }}">
-                <!-- Total no of  paid leave in a year -->  <input type="hidden" id="getplamount" value="{{ $getplamount }}">
-                <!-- Total no of casual leave in a year-->  <input type="hidden" id="getclamount" value="{{ $getclamount }}">
-                <!-- All/Approve,Pending no of casual leave --> <input type="hidden" id="CLcount" value="{{ $CLcount }}">
-                <!-- All/Approve,Pending no of Paid leave --><input type="hidden" id="PLcount" value="{{ $PLcount }}">
-                <input type="hidden" id="userid" name="userid" value = "{{ Auth::user()->id }}">
-
+        <!-- Approved no of casual leave -->    <input type="hidden" id="totclcount" value="{{ $clcount }}">
+            <!-- Approved no of paid leave -->     <input type="hidden" id="totplcount" value="{{ $plcount }}">
+            <!-- Total no of  paid leave in a year -->  <input type="hidden" id="getplamount" value="{{ $getplamount }}">
+            <!-- Total no of casual leave in a year-->  <input type="hidden" id="getclamount" value="{{ $getclamount }}">
+            <!-- All/Approve,Pending no of casual leave --> <input type="hidden" id="CLcount" value="{{ $CLcount }}">
+            <!-- All/Approve,Pending no of Paid leave --><input type="hidden" id="PLcount" value="{{ $PLcount }}">
+            <input type="hidden" id="userid" name="userid" value = "{{ Auth::user()->id }}">
+            <input type="hidden" value="{{ Session::get('id') }}" name="id">
             <div class="w3-row" >
                 <div class="w3-half">
                     <div class="w3-container w3-padding" >
@@ -118,37 +118,52 @@
                         </div>
                     @endif
                     @if (Session::has('message'))
-                            <div class="alert alert-danger">
-                               {{ Session::get('message') }}
-                            </div>
-                        @endif
+                        <div class="alert alert-danger">
+                            {{ Session::get('message') }}
+                        </div>
+                    @endif
                     <div class="w3-card w3-padding">
                         <select name="leavetype" id="leavetype" class="w3-input w3-border w3-round-xlarge" >
                             <option disabled selected id="leavetype">Select Leave Type</option>
                             <option value="1">Paid Leave</option>
                             <option value="2">Casual Leave</option>
+                            <option value="{{Session::get('type')}}" selected>@if(Session::get('type')==1)
+                                 Paid Leave
+                                @else
+                                 Casual Leave
+                            @endif
+                            </option>
                         </select>
 
                         <p></p>
-                        <input type='text' class="w3-input w3-border"  id="txtDate1" name="fromdate" placeholder="Leave from*" autocomplete="off">
+                        <input type='text' class="w3-input w3-border" value="{{ Session::get('fromdate') }}" id="txtDate1" name="fromdate" placeholder="Leave from*" autocomplete="off">
                         <p></p>
-                        <input type='text' class="w3-input w3-border" id="txtDate2" name="todate" placeholder="Leave to*" autocomplete="off">
+                        <input type='text' class="w3-input w3-border" id="txtDate2" value="{{ Session::get('todate') }}" name="todate" placeholder="Leave to*" autocomplete="off">
 
                         <p></p>
-                        <input type="text" class="w3-input w3-border w3-round" placeholder="Duration" id="duration"readonly >
+                        <input type="text" class="w3-input w3-border w3-round" placeholder="Duration" id="duration"readonly value="{{ Session::get('duration') }}">
                         <input type="hidden" class="w3-input w3-border w3-round" placeholder="Duration" id="d"readonly name="duration">
                         <p></p>
 
-                        <select name="reason" id="reason" class="w3-input w3-border w3-round-xlarge" onclick="getReason()">
+                        <select name="reason" id="reason" class="w3-input w3-border w3-round-xlarge">
                             <option disabled selected id="reason">Select Reason for leave</option>
                             <option value="1">Medical Purpose</option>
                             <option value="2">Ocassion</option>
                             <option value="3">Others</option>
+                            <option value="{{Session::get('reason')}}" selected>
+                                @if(Session::get('reason')==1)
+                                    Medical Purpose
+                                @elseif(Session::get('reason')==2)
+                                    Ocassion
+                                @else
+                                    Others
+                                @endif
+                            </option>
                         </select>
 
                         <p></p>
 
-                        <textarea class="w3-input w3-border w3-round w3-animate-top" style="height: 200px; display: none" placeholder="Reason for leave*" id="r" name="reasonbox"></textarea>
+                        <textarea class="w3-input w3-border w3-round w3-animate-top" style="height: 200px; display: none" placeholder="Reason for leave*" id="r" name="reasonbox" >{{Session::get('reasonbox')}}</textarea>
 
                         <p></p>
                         <label class="w3-margin">Supporting Document</label>
@@ -167,19 +182,7 @@
 </div>
 </body>
 
-<script>
-    function copyAddress(){
-        var x = document.getElementById('paddress').value;
-        document.getElementById('caddress').value = x;
-        document.getElementById('undo').style.display ='block';
-        document.getElementById('do').style.display ='none';
-    }
-    function copyAdd(){
-        document.getElementById('caddress').value = " ";
-        document.getElementById('do').style.display ='block';
-        document.getElementById('undo').style.display ='none';
-    }
-</script>
+
 
 
 <script type="text/javascript">
@@ -212,20 +215,18 @@
         }
     )
 
-   $('#leavetype').change(function(){
 
-                document.getElementById('txtDate1').value = null
-                document.getElementById('txtDate2').value = null
-                document.getElementById('duration').value = null
-                var year = (new Date).getFullYear();
-            $('#txtDate1, #txtDate2').datepicker({
-                minDate: 1,
-                maxDate: new Date(year, 11, 31),
-                dateFormat: 'yy-mm-dd',
-                beforeShowDay:  disableSpecificDates
-            })
 
-   });
+
+        var year = (new Date).getFullYear();
+        $('#txtDate1, #txtDate2').datepicker({
+            minDate: 0,
+            maxDate: new Date(year, 11, 31),
+            dateFormat: 'yy-mm-dd',
+            beforeShowDay:  disableSpecificDates
+        })
+
+
 
 
 
@@ -266,9 +267,9 @@
         var days   = (((end - start)/1000/60/60/24)-totalBusinessDays+1)
         var y = days + x
         if(days <= 0){
-          document.getElementById('txtDate1').value = null
-          document.getElementById('txtDate2').value = null
-          document.getElementById('duration').value = null
+            document.getElementById('txtDate1').value = null
+            document.getElementById('txtDate2').value = null
+            document.getElementById('duration').value = null
         }
         else {
             document.getElementById('duration').value = y

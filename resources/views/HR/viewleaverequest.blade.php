@@ -1,7 +1,3 @@
-@if(Session::has('message'))
-    <script>alert("{{ Session::get('message') }}")</script>
-    @endif
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link href="public/css/style.css" rel="stylesheet" type="text/css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
@@ -17,7 +13,7 @@
 <script src="public\js\confirmSubmit.js"></script>
 <link href="public/css/zoombutton.css" rel="stylesheet" type="text/css">
 
-@include('employee.employeeSidebar')
+@include('HR.sidebar')
 <style>
     @media screen and (min-width: 992px) {
         .topnav {
@@ -33,21 +29,19 @@
 </style>
 <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/plug-ins/1.10.21/sorting/datetime-moment.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
-
-
 <div  class="w3-card-4 w3-padding w3-animate-zoom item topnav"  >
     <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium w3-light-gray w3-margin">
         <div class="table-responsive">
             <div class="w3-panel w3-border  w3-padding w3-border-gray w3-round-xlarge w3-center">
-                <strong style="color:black;font-size: 20px;">MY REQUESTS</strong>
+                <strong style="color:black;font-size: 20px;">LEAVE REQUESTS</strong>
             </div>
             <table class="table w3-table-all w3-border w3-round w3-hoverable  data-table" width="100%">
                 <thead>
                 <tr class="w3-green">
                     <th>Sl No.</th>
                     <th>Request Date</th>
+                    <th>Name</th>
                     <th>Leave Type</th>
                     <th>Leave from</th>
                     <th>Leave to</th>
@@ -67,7 +61,7 @@
 <script type="text/javascript">
     $(function () {
 
-     $('.data-table').DataTable({
+        $('.data-table').DataTable({
             "fnRowCallback": function( nRow, aData, iDisplayIndex, iDisplayIndexFull ) {
                 if ( aData['status'] == 0 )
                 {
@@ -77,7 +71,7 @@
 
             processing: true,
             serverSide: true,
-            ajax : "{{ route('leave') }}",
+
 
 
             columns: [
@@ -89,6 +83,19 @@
                         var month = date.getMonth() + 1;
                         return (month.toString().length > 1 ? month : "0" + month) + "/" + date.getDate() + "/" + date.getFullYear();
                     }
+                },
+                {
+                    "data" : 'fname',
+                    render: function(data, type, row) {
+                        if (row.mname != null) {
+                            var name = row.fname + " " + row.mname + " " + row.lname;
+                            return name;
+                        }
+                        else{
+                            return row.fname + " " + row.lname;
+                        }
+                    },
+
                 },
                 {
                     "data" : 'type',
@@ -142,13 +149,11 @@
                         var today = new Date();
                         var datefrom = new Date(year,month,day);
                         if( full.status == 1 || today > datefrom ){
-                            return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Edit Request</button>'+'   '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Delete Request</button>';
+                            return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Approve</button>'+'   '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Reject</button>';
                         }
                         else{
-                            return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red " ><a href="editleave?empid='+full.empid+'&type='+full.type+'&fromdate='+full.fromdate+'&todate='+full.todate+'&reason='+full.reason+'&duration='+full.duration+'&id='+full.id+'&reasonbox='+full.reasonbox+'" style="text-decoration: none"><b style="color: white">Edit Request</b></a></button>'+'   '+'  '+'  '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red " onclick= "return confirmDelete()"> <a href="deleteleave?id='+full.id+'" style="text-decoration: none" ><b style="color: white"> Delete Request</b></a></button>';
+                            return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red " ><a href="acceptleave?id='+full.id+'" style="text-decoration: none" onclick="return  confirmAccept()"><b style="color: white">Accept</b></a></button>'+'   '+'  '+'  '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red " onclick= "return confirmReject() "> <a href="rejectleave?id='+full.id+'" style="text-decoration: none" ><b style="color: white"> Reject</b></a></button>';
                         }
-
-
                     },
                 },
             ]
@@ -159,8 +164,18 @@
 
 </script>
 <script>
-    function  confirmDelete() {
-        var x= confirm('Are you sure want to delete ?');
+    function  confirmAccept() {
+        var x= confirm('Are you sure want to accept ?');
+        if(x){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    function  confirmReject() {
+        var x= confirm('Are you sure want to reject ?');
         if(x){
             return true;
         }
@@ -169,3 +184,4 @@
         }
     }
 </script>
+
