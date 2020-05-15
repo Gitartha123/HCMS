@@ -20,7 +20,7 @@
                        <br><strong class="w3-margin" style="color:white">EMPLOYEE REQUESTS</strong>
                        @php
                             $count =DB::table('request')->where('count','=',0)->count();
-                            $count2 = DB::table('employeeleave')->where('status','=',0)->count();
+                            $count2 = DB::table('employeeleave')->where('count','=',0)->count();
                                @endphp
                        <span  class="w3-card w3-blue w3-right w3-large w3-padding  w3-circle"><i class="fa fa-bell-o w3-xlarge" style="transform: rotate(45deg)"></i>{{ $count + $count2}}</span>
                    </a>

@@ -30,6 +30,10 @@
 <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet">
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+@if(Session::has('message'))
+    <script>alert("{{ Session::get('message') }}")</script>
+    @endif
 <div  class="w3-card-4 w3-padding w3-animate-zoom item topnav"  >
     <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium w3-light-gray w3-margin">
         <div class="table-responsive">
@@ -132,10 +136,10 @@
                             return "Pending";
                         }
                         else if (row.status == 1){
-                            return "Rejected";
+                            return "Accepted";
                         }
                         else if (row.status == 2){
-                            return "Your requested fields are successfully updated";
+                            return "Rejected";
                         }
                     },
                 },
@@ -148,7 +152,7 @@
                         var day = date.getDate();
                         var today = new Date();
                         var datefrom = new Date(year,month,day);
-                        if( full.status == 1 || today > datefrom ){
+                        if( full.status == 1 || today > datefrom || full.status == 2 || full.status == 3){
                             return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Approve</button>'+'   '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Reject</button>';
                         }
                         else{

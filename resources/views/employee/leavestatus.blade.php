@@ -125,10 +125,10 @@
                             return "Pending";
                         }
                         else if (row.status == 1){
-                            return "Rejected";
+                            return "Accepted";
                         }
                         else if (row.status == 2){
-                            return "Your requested fields are successfully updated";
+                            return "Rejected";
                         }
                     },
                 },
@@ -141,7 +141,7 @@
                         var day = date.getDate();
                         var today = new Date();
                         var datefrom = new Date(year,month,day);
-                        if( full.status == 1 || today > datefrom ){
+                        if( full.status == 1 || today > datefrom || full.status == 2 || full.status == 3){
                             return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Edit Request</button>'+'   '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Delete Request</button>';
                         }
                         else{

@@ -371,4 +371,39 @@ class LeaveController extends Controller
 
         return view('HR.viewleaverequest');
     }
+
+    public function acceptLeave(Request $request){
+        $id = $request->input('id');
+        DB::table('employeeleave')
+            ->where('id','=',$id)
+            ->update([
+               'status'=> 1,
+                'count'=>1
+            ]);
+        Session::flash('message','Request Accepted');
+        return redirect()->back();
+    }
+
+    public function rejectLeave(Request $request){
+        $id = $request->input('id');
+        DB::table('employeeleave')
+            ->where('id','=',$id)
+            ->update([
+                'status'=>2,
+                'count'=>1
+            ]);
+        Session::flash('message','Request Rejected');
+        return redirect()->back();
+    }
+
+    public function afterLeaveNoticeView(){
+        $id = Auth::user()->id;
+        DB::table('employeeleave')
+            ->where('empid','=',$id)
+            ->where('count','=',1)
+            ->update([
+                'count'=>2
+            ]);
+        return view('employee.leavestatus');
+    }
 }

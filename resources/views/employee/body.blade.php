@@ -20,7 +20,7 @@
                         <br><strong class="w3-margin" style="color:white;font-size: 15px">APPROVAL REQUESTS</strong>
                         @php
                             $count =DB::table('request')->where('count','=',3)->where('uid','=',Auth::user()->id)->count();
-                            $count2 = DB::table('employeeleave')->where('status','=',0)->where('empid','=',Auth::user()->id)->count();
+                            $count2 = DB::table('employeeleave')->where('count','=',1)->where('empid','=',Auth::user()->id)->count();
                         @endphp
                         <span  class="w3-card w3-blue w3-right w3-large w3-padding  w3-circle"><i class="fa fa-bell w3-xlarge" style="transform: rotate(45deg)"></i>{{ $count+$count2 }}</span>
                     </a>
@@ -59,7 +59,7 @@
                         </div>
                         <div class="w3-half">
                             <div class="w3-card-4 w3-round w3-padding zoom"; style="background-color: #00CC66;height: 100px;">
-                                <a style="text-decoration: none; " href="{{ route('status') }}" >
+                                <a style="text-decoration: none; " href="{{ route('afterleavenoticeview') }}" >
                                     <i class="w3-xxxlarge fa fa-home " style="color: white"></i>
                                     <br><strong class="w3-margin" style="color:white;font-size: 15px">APPROVAL LEAVE REQUESTS</strong>
                                     <span  class="w3-card w3-blue w3-right w3-large w3-padding  w3-circle"><i class="fa fa-bell w3-xlarge" style="transform: rotate(45deg)"></i>{{ $count2 }}</span>
