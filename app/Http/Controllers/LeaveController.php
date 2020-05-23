@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Leave;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Session;
 use Yajra\DataTables\DataTables;
 
@@ -82,6 +84,7 @@ class LeaveController extends Controller
 
     public function submitRequest(Request $request){
         $request->validate([
+            'document' => 'mimes:pdf|max:1000|min:10',
             'leavetype' =>['required'],
             'fromdate' =>['required'],
             'todate' =>['required'],
@@ -92,6 +95,16 @@ class LeaveController extends Controller
             $request->validate([
                'reasonbox' =>['required','max:255']
             ]);
+        }
+
+        $document = $request->file('document');
+        if ($document != null){
+            $new_name  = $document->getClientOriginalExtension();
+            Storage::disk('public')->put('document/'.$document->getFilename().'.'.$new_name,File::get($document));
+            $myfile = $document->getFilename().'.'.$new_name;
+        }
+        else{
+            $myfile = null;
         }
         $fromdate = $request->input('fromdate');
         $todate = $request->input('todate');
@@ -157,6 +170,7 @@ class LeaveController extends Controller
         $data->duration = $duration;
         $data->reason = $request->input('reason');
         $data->reasonbox = $request->input('reasonbox');
+        $data->document = $myfile;
         $data->save();
 
             if ($data->save()){
@@ -263,6 +277,7 @@ class LeaveController extends Controller
 
     public function UpdateLeave(Request $request){
         $request->validate([
+            'document' => 'mimes:pdf|max:1000|min:10',
             'leavetype' =>['required'],
             'fromdate' =>['required'],
             'todate' =>['required'],
@@ -274,6 +289,17 @@ class LeaveController extends Controller
                 'reasonbox' =>['required','max:255']
             ]);
         }
+
+        $document = $request->file('document');
+        if ($document != null){
+            $new_name  = $document->getClientOriginalExtension();
+            Storage::disk('public')->put('document/'.$document->getFilename().'.'.$new_name,File::get($document));
+            $myfile = $document->getFilename().'.'.$new_name;
+        }
+        else{
+            $myfile = null;
+        }
+
         $fromdate = $request->input('fromdate');
         $todate = $request->input('todate');
         $leavetype = $request->input('leavetype');
@@ -340,7 +366,8 @@ class LeaveController extends Controller
                'todate'=>$todate,
                'duration'=>$duration,
                'reason'=>$request->input('reason'),
-               'reasonbox'=>$request->input('reasonbox')
+               'reasonbox'=>$request->input('reasonbox'),
+               'document'=>$myfile
            ]);
 
         if ($update){
@@ -405,5 +432,12 @@ class LeaveController extends Controller
                 'count'=>2
             ]);
         return view('employee.leavestatus');
+    }
+
+    public function viewPDF(Request $request){
+            $document = $request->input('document');
+            return view('employee.viewpdf')->with('document',$document);
+
+
     }
 }

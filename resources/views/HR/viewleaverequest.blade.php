@@ -52,6 +52,7 @@
                     <th>Duration</th>
                     <th>Reason</th>
                     <th>Status</th>
+                    <th>Document</th>
                     <th width="100px"></th>
                 </tr>
                 </thead>
@@ -75,8 +76,7 @@
 
             processing: true,
             serverSide: true,
-
-
+            order:[0,'desc'],
 
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex' },
@@ -144,6 +144,16 @@
                     },
                 },
                 {
+                    data: 'document',
+                    "render": function (data, type, full, row) {
+                        if (full.document != null) {
+                            return ' <a href="viewpdf?document=' + full.document + '" target="_blank"><i class="zoom fa fa-hand-pointer-o w3-xlarge"><b class="w3-small"> Click</b></i></a>'
+                        } else {
+                            return "Document not found"
+                        }
+                    }
+                },
+                {
                     data : null,
                     "render": function ( data, type, full, row ) {
                         var date = new Date(full.fromdate);
@@ -153,7 +163,7 @@
                         var today = new Date();
                         var datefrom = new Date(year,month,day);
                         if( full.status == 1 || today > datefrom || full.status == 2 || full.status == 3){
-                            return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Approve</button>'+'   '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Reject</button>';
+                            return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Accept</button>'+'   '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Reject</button>';
                         }
                         else{
                             return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red " ><a href="acceptleave?id='+full.id+'" style="text-decoration: none" onclick="return  confirmAccept()"><b style="color: white">Accept</b></a></button>'+'   '+'  '+'  '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red " onclick= "return confirmReject() "> <a href="rejectleave?id='+full.id+'" style="text-decoration: none" ><b style="color: white"> Reject</b></a></button>';

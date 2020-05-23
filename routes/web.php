@@ -41,6 +41,8 @@ Route::get('/employeeleaverequest','LeaveController@showLeave');
 Route::get('/acceptleave','LeaveController@acceptLeave')->name('acceptleave');
 Route::get('/rejectleave','LeaveController@rejectLeave')->name('rejectleave');
 Route::get('/viewnotice','LeaveController@afterLeaveNoticeView')->name('afterleavenoticeview');
+Route::get('/viewpdf','LeaveController@viewPDF');
+
 
 Route::get('/status',function (){
     return view('employee.leavestatus');
@@ -50,6 +52,9 @@ Route::group(['middleware'=>'preventbackbutton'],function(){
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('dropdownlist/getdesignation/{id}','DependentDropdown@getdesignation');
     Route::post('/home','EmployeeLogincontroller@login')->name('Employeelogin');
+    Route::get('/salary','Payroll@generateSalary')->name('salary');
+    Route::get('/registerform','EmployeeRegistration@registerForm')->name('register');
+    Route::get('/viewemployee','EmployeeRegistration@viewEmployee')->name('viewemployee');
 });
 
 Route::group(['middleware' => 'auth'],function(){

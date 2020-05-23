@@ -54,6 +54,7 @@
                     <th>Duration</th>
                     <th>Reason</th>
                     <th>Status</th>
+                    <th>Document</th>
                     <th width="100px"></th>
                 </tr>
                 </thead>
@@ -77,6 +78,7 @@
 
             processing: true,
             serverSide: true,
+            order: [ [0, 'desc'] ],
             ajax : "{{ route('leave') }}",
 
 
@@ -133,6 +135,17 @@
                     },
                 },
                 {
+                  data : 'document',
+                  "render":function (data,type,full,row) {
+                      if (full.document != null) {
+                          return ' <a href="viewpdf?document='+full.document+'" target="_blank"><i class="zoom fa fa-hand-pointer-o w3-xlarge"><b class="w3-small"> Click</b></i></a>'
+                      }
+                     else{
+                          return "Document not found"
+                      }
+                  }
+                },
+                {
                     data : null,
                     "render": function ( data, type, full, row ) {
                         var date = new Date(full.fromdate);
@@ -142,10 +155,10 @@
                         var today = new Date();
                         var datefrom = new Date(year,month,day);
                         if( full.status == 1 || today > datefrom || full.status == 2 || full.status == 3){
-                            return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Edit Request</button>'+'   '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Delete Request</button>';
+                            return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Edit</button>'+'   '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red"  disabled>Delete </button>';
                         }
                         else{
-                            return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red " ><a href="editleave?empid='+full.empid+'&type='+full.type+'&fromdate='+full.fromdate+'&todate='+full.todate+'&reason='+full.reason+'&duration='+full.duration+'&id='+full.id+'&reasonbox='+full.reasonbox+'" style="text-decoration: none"><b style="color: white">Edit Request</b></a></button>'+'   '+'  '+'  '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red " onclick= "return confirmDelete()"> <a href="deleteleave?id='+full.id+'" style="text-decoration: none" ><b style="color: white"> Delete Request</b></a></button>';
+                            return '<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red " ><a href="editleave?empid='+full.empid+'&type='+full.type+'&fromdate='+full.fromdate+'&todate='+full.todate+'&reason='+full.reason+'&duration='+full.duration+'&id='+full.id+'&reasonbox='+full.reasonbox+'" style="text-decoration: none"><b style="color: white">Edit</b></a></button>'+'   '+'  '+'  '+'<button  type="button" class="w3-button w3-border w3-round w3-green w3-hover-red " onclick= "return confirmDelete()"> <a href="deleteleave?id='+full.id+'" style="text-decoration: none" ><b style="color: white"> Delete</b></a></button>';
                         }
 
 

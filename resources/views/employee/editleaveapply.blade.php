@@ -167,7 +167,7 @@
 
                         <p></p>
                         <label class="w3-margin">Supporting Document</label>
-                        <input type="file"  name="signature" class="w3-input w3-border w3-round-xlarge btn btn-secondary"  data-toggle="tooltip" data-placement="top" title="Image size should be greater than 150KB and not more than 1MB and choose only JPEG,JPG and PNG image" onchange="validateSignature()" id="signature">
+                        <input type="file"  name="document" class="w3-input w3-border w3-round-xlarge btn btn-secondary"  data-toggle="tooltip" data-placement="top" title="Document size should be greater than 150KB and not more than 1MB and choose only PDF file"  id="signature">
                         <p></p>
                         <div class="w3-center">
                             <button type="submit" class="w3-button w3-hover w3-hover-red w3-border w3-border-grey w3-round-xlarge zoom" >Submit</button>

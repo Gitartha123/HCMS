@@ -24,7 +24,6 @@
     <div id="demoAcc" class="w3-hide w3-white w3-card-4">
         <a style="text-decoration: none;" href="{{ route('apply') }}" class="w3-button w3-bar-item" ><b><i class="fa fa-pencil w3-xlarge w3-right" ></i> Apply Leave</b></a>
         <a style="text-decoration: none;" class="w3-button w3-bar-item" href="{{ route('status') }}"><b>Status</b></a>
-        <a class="w3-button w3-bar-item" ><b>Leave History</b></a>
     </div>
     <button class="w3-bar-item w3-button w3-hide-large" onclick="w3_close()">Close &times;</button>
 </div>

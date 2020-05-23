@@ -16,10 +16,13 @@
 
     <div class="w3-bar-item w3-button" onclick="myAccFunc()"><i class="w3-left fa fa-user  w3-xlarge w3-margin-right"></i><b>Employee</b><i class="w3-right fa fa-caret-down"></i></div>
     <div id="demoAcc" class="w3-hide w3-white w3-card-4">
-        <button class="w3-button w3-bar-item" onclick="EmployeeRegister('register')" id="reg">Employee Registration</button>
-        <button class="w3-button w3-bar-item" onclick="EmployeeRegister('viewemployee')">View Employee</button>
+        <a class="w3-button w3-bar-item" href="{{ route('register') }}" >Employee Registration</a>
+        <a class="w3-button w3-bar-item" href="{{ route('viewemployee') }}">View Employee</a>
     </div>
-
+    <div class="w3-bar-item w3-button" onclick="myAccFunc1()"><i class="w3-left fa fa-money  w3-xlarge w3-margin-right"></i><b>Payroll</b><i class="w3-right fa fa-caret-down"></i></div>
+    <div id="demoAcc1" class="w3-hide w3-white w3-card-4">
+        <a style="text-decoration: none;" href="{{ route('salary') }}" class="w3-button w3-bar-item" ><b><i class="fa fa-pencil w3-xlarge w3-right" ></i>Salary generate</b></a>
+    </div>
     <button class="w3-bar-item w3-button w3-hide-large" onclick="w3_close()">Close &times;</button>
 </div>
 
@@ -40,6 +43,17 @@
     }
     function myAccFunc() {
         var x = document.getElementById("demoAcc");
+        if (x.className.indexOf("w3-show") == -1) {
+            x.className += " w3-show";
+            x.previousElementSibling.className += " w3-green";
+        } else {
+            x.className = x.className.replace(" w3-show", "");
+            x.previousElementSibling.className =
+                x.previousElementSibling.className.replace(" w3-green", "");
+        }
+    }
+    function myAccFunc1() {
+        var x = document.getElementById("demoAcc1");
         if (x.className.indexOf("w3-show") == -1) {
             x.className += " w3-show";
             x.previousElementSibling.className += " w3-green";

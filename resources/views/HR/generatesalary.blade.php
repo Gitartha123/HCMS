@@ -13,35 +13,32 @@
 <script src="public\js\confirmSubmit.js"></script>
 <link href="public/css/zoombutton.css" rel="stylesheet" type="text/css">
 
-
+@include('HR.sidebar')
 <style>
-    .mySlides {display:none;}
-    label.error
-    {
-        color: red;
+    label{
+        font-weight: bold;
     }
-    </style>
-    <style>
-     .nounder
-     {
-         text-decoration:none;
-     }
-    .nounder:hover
-    {
-        color:#0C6;
+
+    @media screen and (min-width: 992px) {
+        .topnav {
+            right:0;left:15%;position:absolute;
+        }
+    }
+    a{
+        text-decoration: none;
     }
 </style>
-<body  style="background-image: linear-gradient(to left,lightblue,white)">
-<div id="dashboard">
-@if(Session::has('message'))
-    <script>alert('{{ Session::get('message') }}')</script>
-    @endif
-@include('HR.sidebar')
-@include('HR.body')
 
+<div  class="w3-card-4 w3-padding  w3-animate-zoom topnav" id="preview">
+    <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium w3-light-gray">
+        <div class="w3-panel w3-border  w3-padding w3-border-gray w3-round-xlarge w3-center">
+            <strong style="color:black;font-size: 20px;">GENERATE SALARY</strong>
+        </div>
+
+    </div>
 </div>
 
-</body>
 
 
-<script src="public/js/sidebar.js"></script>
+
+

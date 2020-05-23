@@ -71,4 +71,11 @@ class EmployeeRegistration extends Controller
 
     }
 
+    public function registerForm(){
+        return view('employee.register');
+    }
+
+    public function viewEmployee(){
+        return view('employee.viewemployee');
+    }
 }
