@@ -110,6 +110,9 @@
                         else if (row.type == 2){
                             return "Casual Leave";
                         }
+                        else if(row.type == 3){
+                            return "Loss of pay Leave";
+                        }
                     },
                 },
                 {data : 'fromdate', name: 'fromdate'},

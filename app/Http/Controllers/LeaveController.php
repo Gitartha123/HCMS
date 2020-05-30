@@ -26,6 +26,10 @@ class LeaveController extends Controller
             ->where('type','=',2)
             ->value('lamount');
 
+        $getlopamount = DB::table('leave')
+            ->where('type','=',3)
+            ->value('lamount');
+
 
         //extract approved applied number of paid leave to visualize to the employee
 
@@ -54,6 +58,20 @@ class LeaveController extends Controller
         }
 
 
+        //extract approved applied number of lop  leave to visualize to the employee
+
+        $count3 = 0;
+        $lopcount = DB::table('employeeleave')
+            ->where('empid','=',Auth::user()->id)
+            ->whereYear('fromdate','=',$year)
+            ->where('type','=',3)
+            ->where('status','=',1)
+            ->pluck('duration');
+        foreach($lopcount as $c){
+            $count3 = $count3 + $c;
+        }
+
+
         //extract all(approved/not approved) applied number of casual leave
 
         $CLcount = 0;
@@ -79,7 +97,44 @@ class LeaveController extends Controller
             $PLcount = $PLcount + $c;
         }
 
-        return view('employee.leaveapply',compact('getclamount'),compact('getplamount'))->with('PLcount',$PLcount)->with('CLcount',$CLcount)->with('plcount',$count1)->with('clcount',$count2)->with('holiday',$getholiday);
+        //extract all(approved/not approved) applied number of lop leave
+
+        $LOPcount = 0;
+        $LOP = DB::table('employeeleave')
+            ->where('empid','=',Auth::user()->id)
+            ->whereYear('fromdate','=',$year)
+            ->where('type','=',3)
+            ->pluck('duration');
+        foreach($LOP as $c){
+            $LOPcount = $LOPcount + $c;
+        }
+
+        //extract fromdate and todate of already applied casual/ leave/lop for disable in calender
+
+        $cl_pl_lop_date = DB::table('employeeleave')
+            ->where('empid','=',Auth::user()->id)
+            ->whereYear('fromdate','=',$year)
+            ->where('status','!=',2)
+            ->select('fromdate','todate')
+            ->get();
+
+        $array = array();
+        $interval = new \DateInterval('P1D');
+        $fromdate = $cl_pl_lop_date->pluck('fromdate');
+        $todate = $cl_pl_lop_date->pluck('todate');
+
+       for($i=0;$i<count($todate);$i++){
+            $real_end = new \DateTime($todate[$i]);
+            $real_end->add($interval);
+            $real_start = new \DateTime($fromdate[$i]);
+            $period = new \DatePeriod($real_start,$interval,$real_end);
+           foreach ($period as $p){
+               $array[]= $p->format('Y-m-d');
+           }
+        }
+
+
+        return view('employee.leaveapply',compact('getclamount'),compact('getplamount'))->with(compact('getlopamount'))->with('PLcount',$PLcount)->with('CLcount',$CLcount)->with('LOPcount',$LOPcount)->with('plcount',$count1)->with('clcount',$count2)->with('lopcount',$count3)->with('holiday',$getholiday)->with('array',$array);
     }
 
     public function submitRequest(Request $request){
@@ -216,6 +271,9 @@ class LeaveController extends Controller
             ->where('type','=',2)
             ->value('lamount');
 
+        $getlopamount = DB::table('leave')
+            ->where('type','=',3)
+            ->value('lamount');
 
         //extract approved applied number of paid leave to visualize to the employee
 
@@ -241,6 +299,19 @@ class LeaveController extends Controller
             ->pluck('duration');
         foreach($clcount as $c){
             $count2 = $count2 + $c;
+        }
+
+        //extract approved applied number of lop  leave to visualize to the employee
+
+        $count3 = 0;
+        $lopcount = DB::table('employeeleave')
+            ->where('empid','=',Auth::user()->id)
+            ->whereYear('fromdate','=',$year)
+            ->where('type','=',3)
+            ->where('status','=',1)
+            ->pluck('duration');
+        foreach($lopcount as $c){
+            $count3 = $count3 + $c;
         }
 
 
@@ -271,7 +342,70 @@ class LeaveController extends Controller
             $PLcount = $PLcount + $c;
         }
 
-        return view('employee.editleaveapply',compact('getclamount'),compact('getplamount'))->with('PLcount',$PLcount)->with('CLcount',$CLcount)->with('plcount',$count1)->with('clcount',$count2)->with('holiday',$getholiday);
+        //extract all(approved/not approved) applied number of lop leave
+
+        $LOPcount = 0;
+        $LOP = DB::table('employeeleave')
+            ->where('empid','=',Auth::user()->id)
+            ->where('id','!=',$request->input('id'))
+            ->whereYear('fromdate','=',$year)
+            ->where('type','=',3)
+            ->pluck('duration');
+        foreach($LOP as $c){
+            $LOPcount = $LOPcount + $c;
+        }
+
+        //extract fromdate and todate of approved all type of leave
+
+        $cl_lop_pl_date = DB::table('employeeleave')
+            ->where('empid','=',Auth::user()->id)
+            ->whereYear('fromdate','=',$year)
+            ->where('status','=',1)
+            ->select('fromdate','todate')
+            ->get();
+
+        $array3 = array();
+        $interval3 = new \DateInterval('P1D');
+        $fromdate3 = $cl_lop_pl_date->pluck('fromdate');
+        $todate3 = $cl_lop_pl_date->pluck('todate');
+
+        for($i=0;$i<count($todate3);$i++){
+            $real_end3 = new \DateTime($todate3[$i]);
+            $real_end3->add($interval3);
+            $real_start3 = new \DateTime($fromdate3[$i]);
+            $period3 = new \DatePeriod($real_start3,$interval3,$real_end3);
+            foreach ($period3 as $p3){
+                $array3[]= $p3->format('Y-m-d');
+            }
+        }
+
+        //extract fromdate and todate of already applied casual for disable in calender
+
+        $cl_date = DB::table('employeeleave')
+            ->where('empid','=',Auth::user()->id)
+            ->whereYear('fromdate','=',$year)
+            ->where('status','=',0)
+            ->where('id','!=',$request->input('id'))
+            ->select('fromdate','todate')
+            ->get();
+
+        $array = array();
+        $interval = new \DateInterval('P1D');
+        $fromdate = $cl_date->pluck('fromdate');
+        $todate = $cl_date->pluck('todate');
+
+        for($i=0;$i<count($todate);$i++){
+            $real_end = new \DateTime($todate[$i]);
+            $real_end->add($interval);
+            $real_start = new \DateTime($fromdate[$i]);
+            $period = new \DatePeriod($real_start,$interval,$real_end);
+            foreach ($period as $p){
+                $array[]= $p->format('Y-m-d');
+            }
+        }
+
+
+        return view('employee.editleaveapply',compact('getclamount'),compact('getplamount'))->with(compact('getlopamount'))->with('PLcount',$PLcount)->with('CLcount',$CLcount)->with('LOPcount',$LOPcount)->with('plcount',$count1)->with('clcount',$count2)->with('lopcount',$count3)->with('holiday',$getholiday)->with('array',$array)->with('array3',$array3);
 
     }
 

@@ -65,10 +65,13 @@
 
         <!-- Approved no of casual leave -->    <input type="hidden" id="totclcount" value="{{ $clcount }}">
             <!-- Approved no of paid leave -->     <input type="hidden" id="totplcount" value="{{ $plcount }}">
+            <!-- Approved no of lop leave -->      <input type="hidden" id="totlopcount" value="{{ $lopcount  }}}">
             <!-- Total no of  paid leave in a year -->  <input type="hidden" id="getplamount" value="{{ $getplamount }}">
             <!-- Total no of casual leave in a year-->  <input type="hidden" id="getclamount" value="{{ $getclamount }}">
+            <!-- Total no of lop leave in a year -->    <input type="hidden" id="getlopamount" value="{{ $getlopamount }}">
             <!-- All/Approve,Pending no of casual leave --> <input type="hidden" id="CLcount" value="{{ $CLcount }}">
             <!-- All/Approve,Pending no of Paid leave --><input type="hidden" id="PLcount" value="{{ $PLcount }}">
+            <!-- All/Approve,Pending no of LOP Leave --> <input type="hidden" id="LOPcount" value="{{ $LOPcount }}">
             <input type="hidden" id="userid" name="userid" value = "{{ Auth::user()->id }}">
             <input type="hidden" value="{{ Session::get('id') }}" name="id">
             <div class="w3-row" >
@@ -83,30 +86,45 @@
                                 <table class="table w3-table-all w3-border w3-hoverable">
                                     <tr class="w3-green">
                                         <td>Leave Type</td>
-                                        <td class="w3-border" style="width: 50%">Casual</td>
-                                        <td class="w3-border" style="width: 50%">Paid</td>
+                                        <td class="w3-border" style="width: 20%">Casual</td>
+                                        <td class="w3-border" style="width: 20%">Paid</td>
+                                        <td class="w3-border" style="width: 20%">Loss of pay</td>
                                     </tr>
                                     <tr class="w3-green">
                                         <td>Total no. of leave</td>
                                         <td class="w3-border">{{ $getclamount }} Days</td>
                                         <td class="w3-border">{{ $getplamount }} Days</td>
+                                        <td class="w3-border">{{ $getlopamount }} Days</td>
                                     </tr>
                                     <tr class="w3-green">
                                         <td>Applied no. of leave</td>
-                                        <td class="w3-border" style="max-width: 50%">{{ $clcount  }} Days</td>
-                                        <td class="w3-border" style="max-width: 50%">{{ $plcount  }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $clcount  }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $plcount  }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $lopcount  }} Days</td>
                                     </tr>
                                     <tr class="w3-green">
                                         <td>Available leave</td>
-                                        <td class="w3-border" style="max-width: 50%">{{ $getclamount - $clcount }} Days</td>
-                                        <td class="w3-border" style="max-width: 50%">{{ $getplamount - $plcount }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $getclamount - $clcount }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $getplamount - $plcount }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $getlopamount - $lopcount }} Days</td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
+                <!--  all approved leave -->
+                @foreach($array as $a=>$key)
+                    <input type="hidden" id="{{ $a }}"  value="{{ $key }}">
+                @endforeach
+                <input type="hidden" value="{{ count($array) }}" id="countarray">
 
+
+                <!-- Casual/PL/LOP leave accept selected id -->
+                @foreach($array3 as $a=>$key)
+                    <input type="hidden" id="array3[{{ $a }}]"  value="{{ $key }}">
+                @endforeach
+                <input type="hidden" value="{{ count($array3) }}" id="countarray3">
                 <div class="w3-half">
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -127,10 +145,13 @@
                             <option disabled selected id="leavetype">Select Leave Type</option>
                             <option value="1">Paid Leave</option>
                             <option value="2">Casual Leave</option>
+                            <option value="3">Loss of pay leave</option>
                             <option value="{{Session::get('type')}}" selected>@if(Session::get('type')==1)
                                  Paid Leave
-                                @else
+                                @elseif(Session::get('type')==2)
                                  Casual Leave
+                                @else
+                                 Loss of pay leave
                             @endif
                             </option>
                         </select>
@@ -190,8 +211,43 @@
         $('[data-toggle = "tooltip"]').tooltip()
     })
 
+
     var holiday = [];
     var arrayable = [];
+    var clleave = [];
+    var clleavearray = [];
+    var countarray = document.getElementById('countarray').value
+    for ($k=0;$k< countarray;$k++ ) {
+        var cl= document.getElementById($k).value
+        var d = new Date(cl);
+        clleave.push(cl);
+        var date3 = d.getDate();
+        var month3 = d.getMonth();
+        var year3 = d.getFullYear();
+        var title3 = 'leave already applied';
+        clleavearray.push([year3,month3,date3,title3]);
+    }
+
+
+
+    var cl_pl_lopleave = [];
+    var cl_pl_lopleavearray = [];
+    var countarray3 = document.getElementById('countarray3').value
+    for ($l=0;$l< countarray3;$l++ ) {
+        var c4= document.getElementById('array3['+$l+']').value
+        var d4 = new Date(c4);
+        cl_pl_lopleave.push(c4);
+        var date4 = d4.getDate();
+        var month4 = d4.getMonth();
+        var year4 = d2.getFullYear();
+        var title4 = 'leave already applied';
+        cl_pl_lopleavearray.push([year4,month4,date4,title4]);
+    }
+
+    console.log(clleave);
+    console.log(clleavearray);
+    console.log(cl_pl_lopleavearray)
+    console.log(cl_pl_lopleave);
     jQuery.ajax(
         {
             url : 'http://localhost/HCMS/api/getholiday',
@@ -220,7 +276,7 @@
 
         var year = (new Date).getFullYear();
         $('#txtDate1, #txtDate2').datepicker({
-            minDate: 0,
+            minDate: 1,
             maxDate: new Date(year, 11, 31),
             dateFormat: 'yy-mm-dd',
             beforeShowDay:  disableSpecificDates
@@ -238,6 +294,24 @@
                 return [false, 'holiday red', arrayable[i][3]];
             }
         }
+
+
+        for (j=0 ;j< cl_pl_lopleavearray.length;j++){
+                if(date.getFullYear() == cl_pl_lopleavearray[j][0]
+                    && date.getMonth() == cl_pl_lopleavearray[j][1]
+                    && date.getDate() == cl_pl_lopleavearray[j][2]){
+                    return [false,'holiday red',cl_pl_lopleavearray[j][3]];
+                }
+        }
+
+        for (h=0 ;h< clleavearray.length;h++){
+                if(date.getFullYear() == clleavearray[h][0]
+                    && date.getMonth() == clleavearray[h][1]
+                    && date.getDate() == clleavearray[h][2]){
+                    return [false,'holiday red',clleavearray[h][3]];
+                }
+        }
+
 
         var day = date.getDay();
         return [day != 0,''];
@@ -258,9 +332,11 @@
             day = current.getDay();
             var mystring = jQuery.datepicker.formatDate('yy-mm-dd', current);
 
-            if ( day < 1 || day > 6 || $.inArray(mystring,holiday)!=-1) {
+            if ( day < 1 || day > 6 || $.inArray(mystring,holiday)!=-1 || $.inArray(mystring,clleave)!=-1 || $.inArray(mystring,cl_pl_lopleave)!=-1 ) {
                 ++totalBusinessDays;
             }
+
+
             current.setDate(current.getDate() + 1);
         }
         var x = " "+"Days"
@@ -297,8 +373,10 @@
         var a = document.getElementById('leavetype').value
         var b = document.getElementById('getclamount').value
         var c = document.getElementById('getplamount').value
+        var d = document.getElementById('getlopamount').value
         var x = document.getElementById('CLcount').value
         var z = document.getElementById('PLcount').value
+        var e = document.getElementById('LOPcount').value
         var y = document.getElementById('d').value
         if(a == 2){
             q = parseInt(x)+parseInt(y);
@@ -346,6 +424,31 @@
                     return  false;
                 }
                 else if(p <= parseInt(c)){
+                    return  true;
+                }
+            }
+        }
+        else if(a == 3){
+            r = parseInt(e)+parseInt(y);
+            if(parseInt(y) < parseInt(d)){
+                if(r > parseInt(d)){
+                    alert('You have only'+(parseInt(d)-parseInt(e))+" "+'days for paid leave');
+                    return  false;
+                }
+                else if(r <= parseInt(d)) {
+                    return true;
+                }
+            }
+            else if (parseInt(y) > parseInt(d)){
+                alert('You are not permitted to take more than '+d+" "+'days in paid leave');
+                return false;
+            }
+            else if(parseInt(y) == parseInt(d)){
+                if(r > parseInt(d)){
+                    alert('You have only'+(parseInt(d)-parseInt(e))+" "+'days for paid leave');
+                    return  false;
+                }
+                else if(r <= parseInt(d)){
                     return  true;
                 }
             }

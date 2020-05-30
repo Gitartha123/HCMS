@@ -42,7 +42,7 @@ Route::get('/acceptleave','LeaveController@acceptLeave')->name('acceptleave');
 Route::get('/rejectleave','LeaveController@rejectLeave')->name('rejectleave');
 Route::get('/viewnotice','LeaveController@afterLeaveNoticeView')->name('afterleavenoticeview');
 Route::get('/viewpdf','LeaveController@viewPDF');
-
+Route::post('/generatesalary','Payroll@generate')->name('generatesalary');
 
 Route::get('/status',function (){
     return view('employee.leavestatus');

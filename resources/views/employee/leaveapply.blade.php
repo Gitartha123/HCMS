@@ -63,18 +63,21 @@
         <form  method="post" action="{{ route('applyLeave') }}" id="form1" enctype="multipart/form-data" onsubmit="return checkAvailivility()" onmouseover="getDays()">
             @csrf
 
-                <!-- Approved no of casual leave -->    <input type="hidden" id="totclcount" value="{{ $clcount }}">
+                <!-- Approved no of casual leave -->   <input type="hidden" id="totclcount" value="{{ $clcount }}">
                 <!-- Approved no of paid leave -->     <input type="hidden" id="totplcount" value="{{ $plcount }}">
+                <!-- Approved no of lop leave -->      <input type="hidden" id="totlopcount" value="{{ $lopcount  }}}">
                 <!-- Total no of  paid leave in a year -->  <input type="hidden" id="getplamount" value="{{ $getplamount }}">
                 <!-- Total no of casual leave in a year-->  <input type="hidden" id="getclamount" value="{{ $getclamount }}">
+                <!-- Total no of lop leave in a year -->    <input type="hidden" id="getlopamount" value="{{ $getlopamount }}">
                 <!-- All/Approve,Pending no of casual leave --> <input type="hidden" id="CLcount" value="{{ $CLcount }}">
                 <!-- All/Approve,Pending no of Paid leave --><input type="hidden" id="PLcount" value="{{ $PLcount }}">
+                <!-- All/Approve,Pending no of LOP Leave --> <input type="hidden" id="LOPcount" value="{{ $LOPcount }}">
                 <input type="hidden" id="userid" name="userid" value = "{{ Auth::user()->id }}">
 
             <div class="w3-row" >
                 <div class="w3-half">
                     <div class="w3-container w3-padding" >
-                        <div class="w3-card w3-border w3-round w3-green w3-margin" >
+                        <div class="w3-card w3-border w3-round-large w3-green w3-margin" >
                             <div class="w3-panel w3-padding w3-center">
                                 <strong style="color:black;font-size: 18px;">MY LEAVE AVAILABILITY</strong>
                             </div>
@@ -83,30 +86,37 @@
                                 <table class="table w3-table-all w3-border w3-hoverable">
                                     <tr class="w3-green">
                                         <td>Leave Type</td>
-                                        <td class="w3-border" style="width: 50%">Casual</td>
-                                        <td class="w3-border" style="width: 50%">Paid</td>
+                                        <td class="w3-border" style="width: 20%">Casual</td>
+                                        <td class="w3-border" style="width: 20%">Paid</td>
+                                        <td class="w3-border" style="width: 20%">Loss of pay</td>
                                     </tr>
                                     <tr class="w3-green">
                                         <td>Total no. of leave</td>
                                         <td class="w3-border">{{ $getclamount }} Days</td>
                                         <td class="w3-border">{{ $getplamount }} Days</td>
+                                        <td class="w3-border">{{ $getlopamount }} Days</td>
                                     </tr>
                                     <tr class="w3-green">
                                         <td>Applied no. of leave</td>
-                                        <td class="w3-border" style="max-width: 50%">{{ $clcount  }} Days</td>
-                                        <td class="w3-border" style="max-width: 50%">{{ $plcount  }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $clcount  }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $plcount  }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $lopcount  }} Days</td>
                                     </tr>
                                     <tr class="w3-green">
                                         <td>Available leave</td>
-                                        <td class="w3-border" style="max-width: 50%">{{ $getclamount - $clcount }} Days</td>
-                                        <td class="w3-border" style="max-width: 50%">{{ $getplamount - $plcount }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $getclamount - $clcount }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $getplamount - $plcount }} Days</td>
+                                        <td class="w3-border" style="max-width: 20%">{{ $getlopamount - $lopcount }} Days</td>
                                     </tr>
                                 </table>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                @foreach($array as $a=>$key)
+                <input type="hidden" id="{{ $a }}"  value="{{ $key }}">
+                @endforeach
+                <input type="hidden" value="{{ count($array) }}" id="countarray">
                 <div class="w3-half">
                     @if ($errors->any())
                         <div class="alert alert-danger">
@@ -127,6 +137,7 @@
                             <option disabled selected id="leavetype">Select Leave Type</option>
                             <option value="1">Paid Leave</option>
                             <option value="2">Casual Leave</option>
+                            <option value="3">Loss of pay Leave</option>
                         </select>
 
                         <p></p>
@@ -160,8 +171,6 @@
                     </div>
                 </div>
             </div>
-
-
         </form>
     </div>
 </div>
@@ -189,6 +198,21 @@
 
     var holiday = [];
     var arrayable = [];
+    var clleave = [];
+    var clleavearray = [];
+    var countarray = document.getElementById('countarray').value
+    for ($k=0;$k< countarray;$k++ ) {
+        var cl= document.getElementById($k).value
+        var d = new Date(cl);
+        clleave.push(cl);
+        var date = d.getDate();
+        var month = d.getMonth();
+        var year = d.getFullYear();
+        var title = 'leave already applied';
+        clleavearray.push([year,month,date,title]);
+    }
+
+    console.log(clleave);
     jQuery.ajax(
         {
             url : 'http://localhost/HCMS/api/getholiday',
@@ -237,7 +261,13 @@
                 return [false, 'holiday red', arrayable[i][3]];
             }
         }
-
+        for (j=0 ;j< clleavearray.length;j++){
+            if(date.getFullYear() == clleavearray[j][0]
+            && date.getMonth() == clleavearray[j][1]
+            && date.getDate() == clleavearray[j][2]){
+                return [false,'holiday red',clleavearray[j][3]];
+            }
+        }
         var day = date.getDay();
         return [day != 0,''];
     }
@@ -257,7 +287,7 @@
             day = current.getDay();
             var mystring = jQuery.datepicker.formatDate('yy-mm-dd', current);
 
-            if ( day < 1 || day > 6 || $.inArray(mystring,holiday)!=-1) {
+            if ( day < 1 || day > 6 || $.inArray(mystring,holiday)!=-1 || $.inArray(mystring,clleave)!=-1) {
                 ++totalBusinessDays;
             }
             current.setDate(current.getDate() + 1);
@@ -296,8 +326,10 @@
         var a = document.getElementById('leavetype').value
         var b = document.getElementById('getclamount').value
         var c = document.getElementById('getplamount').value
+        var d = document.getElementById('getlopamount').value
         var x = document.getElementById('CLcount').value
         var z = document.getElementById('PLcount').value
+        var e = document.getElementById('LOPcount').value
         var y = document.getElementById('d').value
         if(a == 2){
             q = parseInt(x)+parseInt(y);
@@ -345,6 +377,31 @@
                     return  false;
                 }
                 else if(p <= parseInt(c)){
+                    return  true;
+                }
+            }
+        }
+        else if(a == 3){
+            f = parseInt(e)+parseInt(y);
+            if(parseInt(y) < parseInt(d)){
+                if(f > parseInt(d)){
+                    alert('You have only'+(parseInt(d)-parseInt(e))+" "+'days for loss of pay leave');
+                    return  false;
+                }
+                else if(f <= parseInt(d)) {
+                    return true;
+                }
+            }
+            else if (parseInt(y) > parseInt(d)){
+                alert('You are not permitted to take more than '+d+" "+'days in Loss of pay leave');
+                return false;
+            }
+            else if(parseInt(y) == parseInt(d)){
+                if(f > parseInt(d)){
+                    alert('You have only'+(parseInt(d)-parseInt(e))+" "+'days for Loss of pay leave');
+                    return  false;
+                }
+                else if(f <= parseInt(d)){
                     return  true;
                 }
             }
