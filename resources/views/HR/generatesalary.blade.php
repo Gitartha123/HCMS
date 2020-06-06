@@ -15,6 +15,7 @@
 <link href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css" rel="stylesheet"/>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
     @media screen and (min-width: 992px) {
@@ -44,26 +45,33 @@
                         <th>Name</th>
                         <th>Department</th>
                         <th>Designation</th>
+                        <th>Present Days</th>
                         <th>CL Leave</th>
                         <th>PL Leave</th>
                         <th>LOP leave</th>
-                        <th>Present Days</th>
                         <th width="100px">Select All <input type="checkbox" class='checkall w3-right' id='checkall'></th>
                     </tr>
                     </thead>
-                    @foreach($item as $value)
+
+
+                    @foreach($new_item as $value)
                     <tbody>
+
                     <tr class="trow">
                         <td>{{ $value->fname.' '.$value->mname.' '.$value->lname }}<input type="hidden" name="name[]" value="{{ $value->fname.' '.$value->mname.' '.$value->lname }}"></td>
                         <td>{{ $value->name }}<input type="hidden" name="department[]" value="{{ $value->name }}"></td>
                         <td>{{ $value->dname }}<input type="hidden" name="designation[]" value="{{ $value->dname }}"></td>
-                        <input type="hidden" value="{{ $value->employeeid }}">
-                        <td><input type="hidden" name="clleave[]" value=""></td>
-                        <td><input type="hidden" name="plleave[]" value="Male"></td>
-                        <td><input type="hidden" name="lopleave[]" value="Male"></td>
                         <td>{{ $value->total }}<input type="hidden" name="presentdays[]" value="{{ $value->total }}"></td>
+                        <input type="hidden" value="{{ $value->employeeid }}">
+
+                        <td><input type="hidden" name="clleave[]" value="{{ $value->clleave }}">{{ $value->clleave }}</td>
+
+                        <td><input type="hidden" name="plleave[]" value="{{ $value->plleave }}">{{ $value->plleave }}</td>
+
+                        <td><input type="hidden" name="lopleave[]" value="{{ $value->lopleave }}">{{ $value->lopleave }}</td>
                         <td><input type="checkbox" class="delete_check " id="delcheck_.'+full.fname+'" onclick="checkcheckbox();" value="'+full.fname+'"></td>
                     </tr>
+
                     </tbody>
                         @endforeach
                 </table>

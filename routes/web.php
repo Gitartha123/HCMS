@@ -52,7 +52,7 @@ Route::group(['middleware'=>'preventbackbutton'],function(){
     Route::get('/home', 'HomeController@index')->name('home');
     Route::get('dropdownlist/getdesignation/{id}','DependentDropdown@getdesignation');
     Route::post('/home','EmployeeLogincontroller@login')->name('Employeelogin');
-    Route::get('/salary','Payroll@generateSalary')->name('salary');
+    Route::post('/salary','Payroll@generateSalary')->name('salary');
     Route::get('/registerform','EmployeeRegistration@registerForm')->name('register');
     Route::get('/viewemployee','EmployeeRegistration@viewEmployee')->name('viewemployee');
 });
