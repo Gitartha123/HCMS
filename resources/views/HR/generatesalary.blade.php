@@ -37,127 +37,234 @@
             <div class="w3-panel w3-border  w3-padding w3-border-gray w3-round-xlarge w3-center">
                 <strong style="color:black;font-size: 20px;">EMPLOYEE DETAILS</strong>
             </div>
-            <form  id="entriesSelected" method="post" data-route = {{ route('generatesalary') }}>
-                @csrf
-                <table id="salary" class="display" cellspacing="0" width="100%">
-                    <thead>
-                    <tr class="w3-green trow">
-                        <th>Name</th>
-                        <th>Department</th>
-                        <th>Designation</th>
-                        <th>Present Days</th>
-                        <th>CL Leave</th>
-                        <th>PL Leave</th>
-                        <th>LOP leave</th>
-                        <th width="100px">Select All <input type="checkbox" class='checkall w3-right' id='checkall'></th>
-                    </tr>
-                    </thead>
+            <div id="add">
+                <form  id="entriesSelected" method="post" data-route = "{{ route('generatesalary') }}" action="{{ route('generatesalary') }}">
+                    @csrf
+                    <table id="salary" class="display" cellspacing="0" width="100%">
+                        <thead>
+                        <tr class="w3-green trow">
+                            <th>Name</th>
+                            <th>Department</th>
+                            <th>Designation</th>
+                            <th>Present Days</th>
+                            <th>CL Leave</th>
+                            <th>PL Leave</th>
+                            <th>LOP leave</th>
+                            <th></th>
+                            <th width="100px">Select All <input type="checkbox" class='checkall w3-right' id='checkall'></th>
+                        </tr>
+                        </thead>
 
 
-                    @foreach($new_item as $value)
-                    <tbody>
+                        @foreach($new_item as $value)
+                            <tbody>
 
-                    <tr class="trow">
-                        <td>{{ $value->fname.' '.$value->mname.' '.$value->lname }}<input type="hidden" name="name[]" value="{{ $value->fname.' '.$value->mname.' '.$value->lname }}"></td>
-                        <td>{{ $value->name }}<input type="hidden" name="department[]" value="{{ $value->name }}"></td>
-                        <td>{{ $value->dname }}<input type="hidden" name="designation[]" value="{{ $value->dname }}"></td>
-                        <td>{{ $value->total }}<input type="hidden" name="presentdays[]" value="{{ $value->total }}"></td>
-                        <input type="hidden" value="{{ $value->employeeid }}">
+                            <tr class="trow">
+                                <td>{{ $value->fname.' '.$value->mname.' '.$value->lname }}<input type="hidden" name="name" value="{{ $value->fname.' '.$value->mname.' '.$value->lname }}"></td>
+                                <td>{{ $value->name }}<input type="hidden" name="department" value="{{ $value->name }}"></td>
+                                <td>{{ $value->dname }}<input type="hidden" name="designation" value="{{ $value->dname }}"></td>
+                                <td>{{ $value->total }}<input type="hidden" name="presentdays" value="{{ $value->total }}"></td>
+                                <input type="hidden" value="{{ $value->employeeid }}" name="employeeid">
+                                <input type="hidden" value="{{ $value->year_month }}" name="year_month">
+                                <input type="hidden" value="{{ $value->salary }}" name="salary">
+                                <input type="hidden" value="{{ $value->holidaycount }}" name="holidaycount">
+                                <input type="hidden" value="{{ $status }}" name="status">
 
-                        <td><input type="hidden" name="clleave[]" value="{{ $value->clleave }}">{{ $value->clleave }}</td>
+                                <td><input type="hidden" name="clleave" value="{{ $value->clleave }}">{{ $value->clleave }}</td>
 
-                        <td><input type="hidden" name="plleave[]" value="{{ $value->plleave }}">{{ $value->plleave }}</td>
+                                <td><input type="hidden" name="plleave" value="{{ $value->plleave }}">{{ $value->plleave }}</td>
 
-                        <td><input type="hidden" name="lopleave[]" value="{{ $value->lopleave }}">{{ $value->lopleave }}</td>
-                        <td><input type="checkbox" class="delete_check " id="delcheck_.'+full.fname+'" onclick="checkcheckbox();" value="'+full.fname+'"></td>
-                    </tr>
+                                <td><input type="hidden" name="lopleave" value="{{ $value->lopleave }}">{{ $value->lopleave }}</td>
+                                <td><select name="deduction">
+                                        <option disabled selected>Deduction</option>
+                                        @php
+                                            for ($i=0;$i<=31;$i++)
+                                            echo'<option value="'.$i.'">'.$i.'</option>';
+                                        @endphp
+                                    </select> </td>
+                                <td><input type="checkbox" class="delete_check " id="delete_check" onclick="checkcheckbox();" value="'+full.fname+'" name="delete_check"></td>
+                            </tr>
 
-                    </tbody>
+                            </tbody>
                         @endforeach
-                </table>
-                <button id="submit" class="w3-button w3-green w3-hover-red">Generate</button>
-            </form>
+                    </table>
+                    <button id="submit" class="w3-button w3-green w3-hover-red" value="1">Generate</button>
+                    <button id="revert" class="w3-button w3-green w3-hover-red w3-margin" value="2">Revert</button>
+                    <button id="confirm" class="w3-button w3-green w3-hover-red w3-margin" value="3">Confirm</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
-$(document).ready(function() {
-var table = $('#salary').DataTable();
 
-$('#salary tbody').on( 'change', 'tr', function () {
-   $(this).toggleClass('selected');
-    $(this).find('.delete_check').css('background-color','red').toggleClass('checked');
+    $(document).ready(function() {
+        var table = $('#salary').DataTable();
 
-});
-
-
-$('#checkall').click(function () {
-    if($(this).is(':checked')) {
-        $('tr').toggleClass('selected');
-        $('.delete_check').prop('checked', true);
-    }
-    else{
-        $('.delete_check').prop('checked', false);
-        $('tr').toggleClass('selected',false);
-    }
-});
-
-
-
-$('#submit').click( function (e) {
-e.preventDefault();
-var selectedRowInputs = $('.selected input');
-
-//use the serialized version of selectedRowInputs as the data
-//to be sent to the AJAX request
-console.log('serlialized inputs: ',selectedRowInputs.serialize());
-if(selectedRowInputs.length <= 0){
-    alert('You have not seleected');
-}
-else{
-    var x = confirm('Are you sure want to generate salary ?');
-    if(x){
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            },
-            type: "POST",
-            url: $('#entriesSelected').data('route'),
-            data: selectedRowInputs.serialize(),
-            success:function (Response) {
-                console.log(Response);
+        $('#checkall').click(function () {
+            if($(this).is(':checked')) {
+                $('.delete_check').prop('checked', true);
+            }
+            else{
+                $('.delete_check').prop('checked', false);
             }
         });
-    }
-    else{
-        return false;
-    }
-}
 
-
-});
-});
-// Checkbox checked
-function checkcheckbox(){
-
-    // Total checkboxes
-    var length = $('.delete_check').length;
-
-    // Total checked checkboxes
-    var totalchecked = 0;
-    $('.delete_check').each(function(){
-        if($(this).is(':checked')){
-            totalchecked+=1;
+        if($('input[name=status]').val()==1){
+            $('#submit').prop('disabled',true);
+            $('#revert').prop('disabled',true);
         }
-    });
+        $('#submit').click( function (e) {
+            e.preventDefault();
+            var value = [];
+            $("#add input[name=delete_check]:checked").each(function(){
+                row = $(this).closest("tr");
+                value.push({
+                    emp_id :$(row).find("input[name=employeeid]").val(),
+                    presentdays : $(row).find("input[name=presentdays]").val(),
+                    clleave : $(row).find("input[name=clleave]").val(),
+                    plleave : $(row).find("input[name=plleave]").val(),
+                    lopleave : $(row).find("input[name=lopleave]").val(),
+                    deduction : $(row).find("select[name=deduction]").val(),
+                    salary : $(row).find("input[name=salary]").val(),
+                    year_month : $(row).find("input[name=year_month]").val(),
+                    holidaycount : $(row).find("input[name=holidaycount]").val(),
+                    department : $(row).find("input[name=department]").val(),
+                    designation : $(row).find("input[name=designation]").val(),
+                    button_id : $("button[id=submit]").val()
+                });
+            });
 
-    // Checked unchecked checkbox
-    if(totalchecked == length){
-        $("#checkall").prop('checked', true);
-    }else{
-        $('#checkall').prop('checked', false);
+            if(value.length <= 0){
+                alert('You have not selected');
+            }
+            else{
+                var x = confirm('Are you sure want to generate salary ?');
+                if(x){
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: "POST",
+                        url: $('#entriesSelected').data('route'),
+                        contentType: 'application/json',
+                        data: JSON.stringify(value),
+                        success:function (html) {
+                            alert('Salary generated');
+                        }
+                    });
+                }
+                else{
+                    return false;
+                }
+            }
+        });
+        $('#confirm').click( function (e) {
+            e.preventDefault();
+            var value3 = [];
+            value3.push({
+                emp_id : 0,
+                presentdays : 0,
+                clleave : 0,
+                plleave : 0,
+                lopleave : 0,
+                deduction : 0,
+                salary : 0,
+                year_month : $("input[name=year_month]").val(),
+                holidaycount :0,
+                department : 0,
+                designation : 0,
+                button_id : $("button[id=confirm]").val(),
+
+            });
+
+            var x2 = confirm('Are you sure want to confirm?');
+                if(x2){
+                    $('#submit').prop('disabled',true);
+                    $('#revert').prop('disabled',true);
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: "POST",
+                        url: $('#entriesSelected').data('route'),
+                        contentType: 'application/json',
+                        data: JSON.stringify(value3),
+                        success:function (html) {
+                            alert('Final salary list is generated');
+                        }
+                    });
+                }
+                else{
+                    return false;
+                }
+
+        });
+        $('#revert').click( function (e) {
+            e.preventDefault();
+            var value2 = [];
+            $("#add input[name=delete_check]:checked").each(function(){
+                row2 = $(this).closest("tr");
+                value2.push({
+                    emp_id :$(row2).find("input[name=employeeid]").val(),
+                    presentdays : $(row2).find("input[name=presentdays]").val(),
+                    clleave : $(row2).find("input[name=clleave]").val(),
+                    plleave : $(row2).find("input[name=plleave]").val(),
+                    lopleave : $(row2).find("input[name=lopleave]").val(),
+                    deduction : $(row2).find("select[name=deduction]").val(),
+                    salary : $(row2).find("input[name=salary]").val(),
+                    year_month : $(row2).find("input[name=year_month]").val(),
+                    holidaycount : $(row2).find("input[name=holidaycount]").val(),
+                    department : $(row).find("input[name=department]").val(),
+                    designation : $(row).find("input[name=designation]").val(),
+                    button_id : $("button[id=revert]").val()
+                });
+            });
+
+            if(value2.length <= 0){
+                alert('You have not selected');
+            }
+            else{
+                var x2 = confirm('Are you sure want to revert salary ?');
+                if(x2){
+                    $.ajax({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        type: "POST",
+                        url: $('#entriesSelected').data('route'),
+                        contentType: 'application/json',
+                        data: JSON.stringify(value2),
+                        success:function (html) {
+                            alert('Data reverted');
+                        }
+                    });
+                }
+                else{
+                    return false;
+                }
+            }
+        });
+    });
+    // Checkbox checked
+    function checkcheckbox(){
+        // Total checkboxes
+        var length = $('.delete_check').length;
+        // Total checked checkboxes
+        var totalchecked = 0;
+        $('.delete_check').each(function(){
+            if($(this).is(':checked')){
+                totalchecked+=1;
+            }
+        });
+        // Checked unchecked checkbox
+        if(totalchecked == length){
+            $("#checkall").prop('checked', true);
+        }else{
+            $('#checkall').prop('checked', false);
+        }
     }
-}
+
 
 </script>

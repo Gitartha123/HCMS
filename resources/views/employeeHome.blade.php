@@ -14,6 +14,9 @@
 <link href="public/css/zoombutton.css" rel="stylesheet" type="text/css">
 
 <div id="dashboard">
+        @if(Session::has('salmessage'))
+                <script>alert('{{ Session::get('salmessage') }}')</script>
+                @endif
 @include('employee.employeeSidebar')
     @if(Session::has('message'))
         <script>alert("{{ Session::get('message') }}")</script>

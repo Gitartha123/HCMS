@@ -25,12 +25,48 @@
         <a style="text-decoration: none;" href="{{ route('apply') }}" class="w3-button w3-bar-item" ><b><i class="fa fa-pencil w3-xlarge w3-right" ></i> Apply Leave</b></a>
         <a style="text-decoration: none;" class="w3-button w3-bar-item" href="{{ route('status') }}"><b>Status</b></a>
     </div>
+    <a style="text-decoration: none;" onclick="document.getElementById('id03').style.display ='block'" class="w3-button w3-bar-item" ><b><i class="fa fa-money w3-xlarge w3-left w3-margin-right" ></i>View salary </b></a>
     <button class="w3-bar-item w3-button w3-hide-large" onclick="w3_close()">Close &times;</button>
 </div>
 
 <div class="w3-main" style="margin-left:200px">
     <div class="w3-teal">
         <button class="w3-button w3-teal w3-xlarge w3-hide-large" onclick="w3_open()">&#9776;</button>
+    </div>
+</div>
+
+<div id="id03" class="w3-modal">
+    <div class="w3-modal-content">
+        <div class="w3-container" >
+            <div class="w3-card-4 w3-padding  w3-animate-zoom  item topnav w3-center w3-light-blue" id="body" style="max-width: 500px;">
+                <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium ">
+                      <span onclick="document.getElementById('id03').style.display='none'"
+                            class="w3-button w3-display-topright w3-red"><i class="w3-xlarge fa fa-close"></i> </span>
+                    <div class="w3-row w3-row-padding w3-margin">
+                        <div class="w3-card-4 w3-round w3-padding"; style="background-color: #00CC66;height: 100px;">
+                            <form action="{{ route('viewsalary') }}" method="post">
+                                @csrf
+                                <?php $month_array = range(1,date('m')) ?>
+                                <select class="w3-input" name="month">
+                                    <option disabled>Select month</option>
+                                    <?php
+                                    foreach($month_array as $month){
+                                        $year = date('Y');
+                                        $monthPadding = str_pad($month,2,"0",STR_PAD_LEFT);
+                                        $fdate = date('F',strtotime("$year-$monthPadding-01"));
+                                        echo '<option value="'.$monthPadding.'">'.$fdate.'</option>';
+                                    }
+                                    ?>
+                                </select>
+                                <input type="hidden" name="empid" value="{{ Auth::user()->id  }}">
+                                <p></p>
+                                <button type="submit" class="w3-btn w3-hover-red w3-round w3-light-blue">Submit</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

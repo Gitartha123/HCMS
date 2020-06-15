@@ -43,6 +43,7 @@ Route::get('/rejectleave','LeaveController@rejectLeave')->name('rejectleave');
 Route::get('/viewnotice','LeaveController@afterLeaveNoticeView')->name('afterleavenoticeview');
 Route::get('/viewpdf','LeaveController@viewPDF');
 Route::post('/generatesalary','Payroll@generate')->name('generatesalary');
+Route::post('/viewsalary','Payroll@viewSalary')->name('viewsalary');
 
 Route::get('/status',function (){
     return view('employee.leavestatus');
