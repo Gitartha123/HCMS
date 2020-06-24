@@ -27,12 +27,15 @@
     a{
         text-decoration: none;
     }
+    div{
+        color: white;
+    }
 </style>
 
-<div  class="w3-card-4 w3-padding  w3-animate-zoom topnav" id="action">
-    <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium w3-light-gray">
+<div  class=" w3-padding  w3-animate-zoom topnav" id="action">
+    <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium " style="background-color: rgba(0,0,0,0.5)">
         <div class="w3-panel w3-border  w3-padding w3-border-gray w3-round-xlarge w3-center">
-            <strong style="color:black;font-size: 20px;"> EMPLOYEE DETAILS</strong>
+            <strong style="color:white;font-size: 20px;"> EMPLOYEE DETAILS</strong>
         </div>
         <form  action="{{ route('action') }}" method="post" onsubmit ="return ConfirmSave()">
             @foreach($data as $d)

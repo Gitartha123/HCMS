@@ -27,6 +27,7 @@ class Payroll extends Controller
 
         return $status;
     }
+
     public function getHolidaycount(Request $request){
         $year = date('Y');
         $interval = new \DateInterval('P1D');
@@ -133,16 +134,12 @@ class Payroll extends Controller
 
         $g = $this->getData(2,$request);
 
-        $item = DB::table('attendance')
-            ->leftJoin('users','attendance.employeeid','=','users.id')
+        $item = DB::table('users')
             ->join('designation', 'users.desg', '=', 'designation.id')
             ->join('department', 'designation.deptid', '=', 'department.id')
-            ->select('employeeid','fname','mname','lname','users.salary','users.id','dname','name',DB::raw('count(*) as total'))
-            ->where('checkin','!=',null)
-            ->whereMonth('date','=',$this->getMonth($request))
-            ->whereYear('date','=',date('Y'))
-            ->groupBy('employeeid')
+            ->select('fname','mname','lname','users.salary','users.id','dname','name')
             ->get();
+
 
 
         $new_item = [];
@@ -158,7 +155,7 @@ class Payroll extends Controller
         }
 
 
-
+        $empid_duration = [];
         for($i=0;$i<count($array_keys);$i++){
             $empid_duration[$i][] = $array_keys[$i];
             $empid_duration[$i][] = $array_values[$i];
@@ -186,7 +183,7 @@ class Payroll extends Controller
         }
 
 
-
+        $empid_duration1 = [];
         for($i=0;$i<count($array_keys1);$i++){
             $empid_duration1[$i][] = $array_keys1[$i];
             $empid_duration1[$i][] = $array_values1[$i];
@@ -212,7 +209,7 @@ class Payroll extends Controller
         }
 
 
-
+        $empid_duration2 = [];
         for($i=0;$i<count($array_keys2);$i++){
             $empid_duration2[$i][] = $array_keys2[$i];
             $empid_duration2[$i][] = $array_values2[$i];
@@ -228,8 +225,61 @@ class Payroll extends Controller
             }
         }
 
+        //attendance count for each employee in users table of selected month
+
+        $presentdays = DB::table('attendance')
+            ->select('employeeid',DB::raw('count(*) as total'))
+            ->where('checkin','!=',null)
+            ->whereYear('date','=',date('Y'))
+            ->whereMonth('date','=',$this->getMonth($request))
+            ->groupBy('employeeid')
+            ->get();
+
+        $attendance = [];
+        for($i=0;$i<count($presentdays);$i++){
+            $attendance[$i][] = $presentdays[$i]->employeeid;
+            $attendance[$i][] = $presentdays[$i]->total;
+        }
+        for ($i=0;$i< count($new_item);$i++){
+            $new_item[$i]->total=0;
+            for($j=0;$j<count($attendance);$j++){
+                if($attendance[$j][0] == $item[$i]->id){
+                    $new_item[$i]->total = $attendance[$j][1];
+                }
+            }
+        }
+
+        //deduction from salary table
+
+        $deduction = DB::table('salary')
+            ->where('year_month','=',date('Y-m',strtotime('01-'.$this->getMonth($request).'-'.date('Y').'')))
+            ->get();
+
+        $deduct = [];
+        for($i=0;$i<count($deduction);$i++){
+            $deduct[$i][] = $deduction[$i]->empno;
+            $deduct[$i][] = $deduction[$i]->deduction;
+            $deduct[$i][] = $deduction[$i]->deductedsal;
+            $deduct[$i][] = $deduction[$i]->actualsal;
+            $deduct[$i][] = $deduction[$i]->empsalary;
+        }
+        for ($i=0;$i< count($new_item);$i++){
+            $new_item[$i]->deduction=0;
+            $new_item[$i]->salary_by_attendance=0;
+            $new_item[$i]->deducted_salary=0;
+            $new_item[$i]->final_salary=0;
+            for($j=0;$j<count($deduct);$j++){
+                if($deduct[$j][0] == $item[$i]->id){
+                    $new_item[$i]->deduction = $deduct[$j][1];
+                    $new_item[$i]->salary_by_attendance = $deduct[$j][3];
+                    $new_item[$i]->deducted_salary= $deduct[$j][2];
+                    $new_item[$i]->final_salary= $deduct[$j][4];
+                }
+            }
+        }
 
         return view('HR.generatesalary')->with('new_item',$new_item)->with('status',$this->getStatus($request));
+
     }
 
     public function generate(Request $request){
@@ -250,13 +300,12 @@ class Payroll extends Controller
                 $clleave = $item[$i]['clleave'];
                 $plleave = $item[$i]['plleave'];
                 $lopleave = $item[$i]['lopleave'];
-                $holidaycount = $item[$i]['holidaycount'];
                 $deduction = $item[$i]['deduction'];
                 $department = $item[$i]["department"];
                 $designation = $item[$i]["designation"];
-                $actual_salary = ($salary_per_day * ($attendance + $plleave + $clleave + $holidaycount));
-                $deducted_salary = ($salary_per_day * $deduction);
-                $final_salary = $actual_salary - $deducted_salary;
+                $actual_salary = $item[$i]['actual_salary'];
+                $deducted_salary = $item[$i]['deducted_salary'];
+                $final_salary = $item[$i]['final_salary'];
                 $check_availability = DB::table('salary')
                     ->where('empno','=',$empno)
                     ->where('year_month','=',$year_month)
@@ -275,17 +324,47 @@ class Payroll extends Controller
                         $salary_entry->presentdays = $attendance;
                         $salary_entry->actualsal = $actual_salary;
                         $salary_entry->deductedsal = $deducted_salary;
+                        if($deduction == null ){
+                            $deduction = 100;
+                        }
+                        $salary_entry->deduction = $deduction;
                         $salary_entry->save();
+
                     }
                 }
                 elseif ($button_id == 2){
-                    DB::table('salary')
-                        ->where('empno','=',$empno)
-                        ->where('year_month','=',$year_month)
-                        ->update([
-                            'empsalary'=>$final_salary,
-                            'deductedsal'=>$deducted_salary,
-                        ]);
+                    if($check_availability == 0){
+                                $salary_entry->empno = $empno;
+                                $salary_entry->empsalary = $final_salary;
+                                $salary_entry->year_month = $year_month;
+                                $salary_entry->department = $department;
+                                $salary_entry->designation = $designation;
+                                $salary_entry->clleave = $clleave;
+                                $salary_entry->plleave = $plleave;
+                                $salary_entry->lopleave = $lopleave;
+                                $salary_entry->salperday = $salary_per_day;
+                                $salary_entry->presentdays = $attendance;
+                                $salary_entry->actualsal = $actual_salary;
+                                $salary_entry->deductedsal = $deducted_salary;
+                                if($deduction == null ){
+                                    $deduction = 100;
+                                }
+                                $salary_entry->deduction = $deduction;
+                                $salary_entry->save();
+                            }
+
+                     else{
+                         DB::table('salary')
+                             ->where('empno','=',$empno)
+                             ->where('year_month','=',$year_month)
+                             ->update([
+                                 'actualsal' =>$actual_salary,
+                                 'deductedsal'=>$deducted_salary,
+                                 'empsalary'=>$final_salary,
+                                 'deduction'=>$deduction,
+                             ]);
+                     }
+
                 }
                 elseif ($button_id == 3){
                     DB::table('salary')
@@ -293,6 +372,8 @@ class Payroll extends Controller
                         ->update([
                             'status'=>1
                         ]);
+
+
                 }
 
 
@@ -313,17 +394,59 @@ class Payroll extends Controller
             ->get();
 
 
-
         if($data->isNotEmpty()){
             $item = ['data'=>$data];
             $pdf = PDF::loadView('employee.mysalary',$item);
-
             return $pdf->download('mysalary.pdf');
         }
         else{
             Session::flash('salmessage','Salary is not generated');
             return view('employeeHome');
         }
+
+    }
+
+    public function EmpSalaryview(Request $request){
+            $month = $request->input('month');
+            $year_month = date('Y-m',strtotime('01-'.$month.'-'.date('Y').''));
+            $data= DB::table('salary')
+                ->leftJoin('users','salary.empno','users.id')
+                ->where('salary.status','=',1)
+                ->where('year_month','=',$year_month)
+                ->get();
+
+        if ($data->isNotEmpty()){
+            return view('HR.empsalaryview')->with('data',$data);
+        }
+        else{
+            Session::flash('salmessage','Salaries are not generated');
+            return view('home');
+        }
+    }
+
+    public function ViewEmpsalary(Request $request){
+        $data= ([
+            'empno'=>$request->input('empno'),
+            'department'=>$request->input('department'),
+            'designation'=>$request->input('designation'),
+            'name'=>$request->input('name'),
+            'joindate'=>$request->input('joindate'),
+            'presentdays'=>$request->input('presentdays'),
+            'clleave'=>$request->input('clleave'),
+            'plleave'=>$request->input('plleave'),
+            'lopleave'=>$request->input('lopleave'),
+            'salary'=>$request->input('salary'),
+            'actualsal'=>$request->input('actualsal'),
+            'deductedsal'=>$request->input('deductedsal'),
+            'empsalary'=>$request->input('empsalary'),
+            'year_month'=>$request->input('year_month')
+        ]);
+
+
+        $item = ['data'=>$data];
+        $pdf = PDF::loadView('HR.employeesalary',$item);
+        return $pdf->download('salary.pdf');
+
 
     }
 }

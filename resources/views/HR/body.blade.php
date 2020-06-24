@@ -10,11 +10,11 @@
 </style>
 
 <script src="public/js/photovalidation.js"></script>
-<div class="w3-card-4 w3-padding  w3-animate-zoom  item topnav w3-center" id="body">
+<div class="w3-card-4 w3-padding  w3-animate-zoom  item topnav w3-center" id="body"  style="background-image: url('{{ asset('resources/views/image/effective-employee-management.jpg') }}'); background-repeat: no-repeat;   background-size: auto;   background-position: center; height:100%;-webkit-background-size:cover;">
     <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium ">
        <div class="w3-row w3-row-padding w3-margin">
            <div class="w3-quarter w3-margin">
-               <div class="w3-card-4 w3-round w3-padding zoom"; style="background-color: #00CC66;height: 100px;">
+               <div class="w3-card-4 w3-round w3-padding zoom"; style="background-image: url('{{ asset('resources/views/image/Top-60-Employee-Engagement-image43-1024x510(2).png') }}');background-repeat: no-repeat;   background-size: auto;   background-position: center;height: 100px;-webkit-background-size:cover;">
                    <a style="text-decoration: none; "onclick="document.getElementById('id01').style.display ='block'">
                        <i class="w3-xxxlarge fa fa-user" style="color: white"></i>
                        <br><strong class="w3-margin" style="color:white">EMPLOYEE REQUESTS</strong>
@@ -43,10 +43,10 @@
 <div id="id01" class="w3-modal">
     <div class="w3-modal-content">
         <div class="w3-container">
-            <div class="w3-card-4 w3-padding  w3-animate-zoom  item topnav w3-center w3-light-blue" id="body">
+            <div class="w3-card-4 w3-padding  w3-animate-zoom  item topnav w3-center " id="body" style="background-color: rgba(0,0,0,0.5)">
                 <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium ">
                       <span onclick="document.getElementById('id01').style.display='none'"
-                            class="w3-button w3-display-topright w3-red"><i class="w3-xlarge fa fa-close"></i> </span>
+                            class="w3-button w3-display-topright w3-red"><i class="fa fa-close"></i> </span>
                     <div class="w3-row w3-row-padding w3-margin">
                         <div class="w3-half">
                             <div class="w3-card-4 w3-round w3-padding zoom"; style="background-color: #00CC66;height: 100px;">

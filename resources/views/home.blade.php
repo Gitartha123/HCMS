@@ -31,10 +31,13 @@
         color:#0C6;
     }
 </style>
-<body  style="background-image: linear-gradient(to left,lightblue,white)">
+<body  style="background-image: linear-gradient(to right,black,black)">
 <div id="dashboard">
 @if(Session::has('message'))
     <script>alert('{{ Session::get('message') }}')</script>
+    @endif
+@if(Session::has('salmessage'))
+    <script>alert('{{ Session::get('salmessage') }}')</script>
     @endif
 @include('HR.sidebar')
 @include('HR.body')

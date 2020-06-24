@@ -27,14 +27,18 @@
     a{
         text-decoration: none;
     }
+    #preview{
+        color:white;
+    }
 </style>
 @if(Session::has('errornetwork'))
     <script>alert('{{ Session::get('errornetwork') }}')</script>
     @endif
-<div  class="w3-card-4 w3-padding  w3-animate-zoom topnav" id="preview">
-    <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium w3-light-gray">
+<body onload="document.getElementById('register').style.display ='none'">
+<div  class=" w3-padding  w3-animate-zoom topnav" id="preview">
+    <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium" style="background-color: rgba(0,0,0,0.5)">
         <div class="w3-panel w3-border  w3-padding w3-border-gray w3-round-xlarge w3-center">
-            <strong style="color:black;font-size: 20px;">PREVIEW EMPLOYEE DETAILS</strong>
+            <strong style="color:white;font-size: 20px;">PREVIEW EMPLOYEE DETAILS</strong>
         </div>
         <form  method="post" action="{{ route('submission') }}" onsubmit ="return ConfirmSave()">
             @csrf

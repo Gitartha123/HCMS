@@ -17,25 +17,13 @@
 <script src="//cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
 
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<style>
-    @media screen and (min-width: 992px) {
-        .topnav {
-            right:0;left:15%;position:absolute;
-        }
-    }
-    .dataTables_filter{
-        margin-right:2%;
-    }
-    table{
-        font-size: small;
-    }
-</style>
+
 @include('HR.sidebar');
-<div  class="w3-card-4 w3-padding w3-animate-zoom item topnav" id="viewemployee" >
-    <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium w3-light-gray w3-margin">
+<div  class=" w3-padding w3-animate-zoom item topnav" id="viewemployee" >
+    <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium w3-margin" style="background-color: rgba(0,0,0,0.5);">
         <div class="table-responsive">
-            <div class="w3-panel w3-border  w3-padding w3-border-gray w3-round-xlarge w3-center">
-                <strong style="color:black;font-size: 20px;">EMPLOYEE DETAILS</strong>
+            <div class="w3-panel w3-border  w3-padding w3-border-white w3-round-xlarge w3-center">
+                <strong style="color:white;font-size: 20px;">GENERATE EMPLOYEE SALARY</strong>
             </div>
             <div id="add">
                 <form  id="entriesSelected" method="post" data-route = "{{ route('generatesalary') }}" action="{{ route('generatesalary') }}">
@@ -43,53 +31,70 @@
                     <table id="salary" class="display" cellspacing="0" width="100%">
                         <thead>
                         <tr class="w3-green trow">
-                            <th>Name</th>
-                            <th>Department</th>
-                            <th>Designation</th>
+                            <th width="100px">Name</th>
+                            <th>Dept.</th>
+                            <th>Desg.</th>
                             <th>Present Days</th>
                             <th>CL Leave</th>
                             <th>PL Leave</th>
                             <th>LOP leave</th>
-                            <th></th>
-                            <th width="100px">Select All <input type="checkbox" class='checkall w3-right' id='checkall'></th>
+                            <th>Deduction</th>
+                            <th>Generated Salary</th>
+                            <th>Deducted salary</th>
+                            <th>Final Salary</th>
+                            <th >Select All <input type="checkbox" class='checkall w3-right' id='checkall'></th>
                         </tr>
                         </thead>
 
-
+                        <tbody>
                         @foreach($new_item as $value)
-                            <tbody>
+
 
                             <tr class="trow">
                                 <td>{{ $value->fname.' '.$value->mname.' '.$value->lname }}<input type="hidden" name="name" value="{{ $value->fname.' '.$value->mname.' '.$value->lname }}"></td>
                                 <td>{{ $value->name }}<input type="hidden" name="department" value="{{ $value->name }}"></td>
                                 <td>{{ $value->dname }}<input type="hidden" name="designation" value="{{ $value->dname }}"></td>
-                                <td>{{ $value->total }}<input type="hidden" name="presentdays" value="{{ $value->total }}"></td>
-                                <input type="hidden" value="{{ $value->employeeid }}" name="employeeid">
+                                <td>{{ $value->total }} Days<input type="hidden" name="presentdays" value="{{ $value->total }}"></td>
+                                <input type="hidden" value="{{ $value->id }}" name="employeeid">
                                 <input type="hidden" value="{{ $value->year_month }}" name="year_month">
                                 <input type="hidden" value="{{ $value->salary }}" name="salary">
                                 <input type="hidden" value="{{ $value->holidaycount }}" name="holidaycount">
                                 <input type="hidden" value="{{ $status }}" name="status">
 
-                                <td><input type="hidden" name="clleave" value="{{ $value->clleave }}">{{ $value->clleave }}</td>
+                                <td><input type="hidden" name="clleave" value="{{ $value->clleave }}">{{ $value->clleave }} Days</td>
 
-                                <td><input type="hidden" name="plleave" value="{{ $value->plleave }}">{{ $value->plleave }}</td>
+                                <td><input type="hidden" name="plleave" value="{{ $value->plleave }}">{{ $value->plleave }} Days</td>
 
-                                <td><input type="hidden" name="lopleave" value="{{ $value->lopleave }}">{{ $value->lopleave }}</td>
-                                <td><select name="deduction">
+                                <td><input type="hidden" name="lopleave" value="{{ $value->lopleave }}">{{ $value->lopleave }} Days</td>
+
+                                <td id="ded">
+                                    @if($value->deduction==null)
+                                    <select name="deduction">
                                         <option disabled selected>Deduction</option>
                                         @php
-                                            for ($i=0;$i<=31;$i++)
+                                            for ($i=1;$i<=31;$i++)
                                             echo'<option value="'.$i.'">'.$i.'</option>';
                                         @endphp
-                                    </select> </td>
+                                    </select>
+                                    @elseif($value->deduction != null)
+                                        @if($value->deduction == 100)
+                                            0 Days
+                                        @else
+                                        {{ $value->deduction }} Days<input type="hidden" name="deduct" value="{{ $value->deduction }}">
+                                            @endif
+                                @endif
+                                </td>
+                                <td id="s1">{{ $value->salary_by_attendance  }}/-</td>
+                                <td id="s2">{{ $value->deducted_salary }}/-</td>
+                                <td id="s3">{{ $value->final_salary }}/-<input name="s3" value="{{ $value->final_salary }}" type="hidden"></td>
                                 <td><input type="checkbox" class="delete_check " id="delete_check" onclick="checkcheckbox();" value="'+full.fname+'" name="delete_check"></td>
                             </tr>
-
-                            </tbody>
                         @endforeach
+                        </tbody>
                     </table>
                     <button id="submit" class="w3-button w3-green w3-hover-red" value="1">Generate</button>
-                    <button id="revert" class="w3-button w3-green w3-hover-red w3-margin" value="2">Revert</button>
+                    <button id="revert" class="w3-button w3-green w3-hover-red w3-margin" value="2" style="display:none;">Generate</button>
+                    <button id="revert1" class="w3-button w3-green w3-hover-red w3-margin" value="4">Revert</button>
                     <button id="confirm" class="w3-button w3-green w3-hover-red w3-margin" value="3">Confirm</button>
                 </form>
             </div>
@@ -102,6 +107,23 @@
     $(document).ready(function() {
         var table = $('#salary').DataTable();
 
+
+        if ($('input[name=status]').val().length == 0){
+            $('#revert1').prop('disabled',true);
+            $('#confirm').prop('disabled',true);
+        }
+
+        arr = [];
+
+        $('#salary tbody tr').each(function () {
+            fs =  $(this).find('input[name=s3]').val();
+            if(fs == 0){
+                arr.push({
+                    'value' : 1
+                });
+            }
+        });
+        console.log(arr);
         $('#checkall').click(function () {
             if($(this).is(':checked')) {
                 $('.delete_check').prop('checked', true);
@@ -113,35 +135,63 @@
 
         if($('input[name=status]').val()==1){
             $('#submit').prop('disabled',true);
-            $('#revert').prop('disabled',true);
+            $('#revert1').prop('disabled',true);
         }
         $('#submit').click( function (e) {
             e.preventDefault();
             var value = [];
             $("#add input[name=delete_check]:checked").each(function(){
                 row = $(this).closest("tr");
+                a = $(row).find('select[name=deduction]').val();
+                b = $(row).find("input[name=presentdays]").val();
+                c = $(row).find("input[name=clleave]").val();
+                f = $(row).find("input[name=plleave]").val();
+                h = $(row).find("input[name=salary]").val();
+                g = $(row).find("input[name=lopleave]").val();
+                i = $(row).find("input[name=holidaycount]").val();
+                if(a!=null){
+                    $(row).find('#ded').html(a +' '+'Days');
+                }
+                else{
+                    a = 0;
+                    $(row).find('#ded').html(a +' '+'Days');
+                }
+                salary_per_day = h/30;
+                actual_salary = salary_per_day * (parseInt(b)+parseInt(c)+ parseInt(f)+parseInt(i));
+                deducted_salary = salary_per_day * parseInt(a);
+                final_salary = actual_salary - deducted_salary;
                 value.push({
                     emp_id :$(row).find("input[name=employeeid]").val(),
-                    presentdays : $(row).find("input[name=presentdays]").val(),
-                    clleave : $(row).find("input[name=clleave]").val(),
-                    plleave : $(row).find("input[name=plleave]").val(),
-                    lopleave : $(row).find("input[name=lopleave]").val(),
-                    deduction : $(row).find("select[name=deduction]").val(),
-                    salary : $(row).find("input[name=salary]").val(),
+                    presentdays : b,
+                    clleave :c,
+                    plleave : f,
+                    lopleave : g,
+                    deduction : a,
+                    salary : h,
                     year_month : $(row).find("input[name=year_month]").val(),
-                    holidaycount : $(row).find("input[name=holidaycount]").val(),
                     department : $(row).find("input[name=department]").val(),
                     designation : $(row).find("input[name=designation]").val(),
+                    actual_salary :actual_salary.toFixed(2),
+                    deducted_salary : deducted_salary.toFixed(2),
+                    final_salary : final_salary.toFixed(2),
                     button_id : $("button[id=submit]").val()
                 });
+
+                if($('#input[name=status]').val() == null){
+                    $(row).find('#s1').html(actual_salary.toFixed(2)+' '+'/-');
+                    $(row).find('#s2').html(deducted_salary.toFixed(2)+' '+'/-');
+                    $(row).find('#s3').html(final_salary.toFixed(2)+' '+'/-');
+                }
+
             });
+
 
             if(value.length <= 0){
                 alert('You have not selected');
             }
-            else{
+            else {
                 var x = confirm('Are you sure want to generate salary ?');
-                if(x){
+                if (x) {
                     $.ajax({
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -150,15 +200,29 @@
                         url: $('#entriesSelected').data('route'),
                         contentType: 'application/json',
                         data: JSON.stringify(value),
-                        success:function (html) {
+                        success: function (html) {
                             alert('Salary generated');
+                            $('#revert1').prop('disabled', false);
+                            $('#confirm').prop('disabled', false);
+                            $('.delete_check').prop('checked', false);
                         }
                     });
-                }
-                else{
+                } else {
                     return false;
                 }
             }
+            $('#salary tbody tr').each(function () {
+                fs =  $(this).find('input[name=s3]').val();
+                if(fs == 0){
+                    arr.push({
+                        'value' : 1
+                    });
+                }
+                else{
+                    arr.length = 0;
+                }
+            });
+            console.log(arr.length);
         });
         $('#confirm').click( function (e) {
             e.preventDefault();
@@ -171,6 +235,9 @@
                 lopleave : 0,
                 deduction : 0,
                 salary : 0,
+                actual_salary :0,
+                deducted_salary : 0,
+                final_salary : 0,
                 year_month : $("input[name=year_month]").val(),
                 holidaycount :0,
                 department : 0,
@@ -179,7 +246,8 @@
 
             });
 
-            var x2 = confirm('Are you sure want to confirm?');
+            if(arr.length == 0){
+                var x2 = confirm('Are you sure want to confirm?');
                 if(x2){
                     $('#submit').prop('disabled',true);
                     $('#revert').prop('disabled',true);
@@ -193,6 +261,7 @@
                         data: JSON.stringify(value3),
                         success:function (html) {
                             alert('Final salary list is generated');
+                            $('#revert1').prop('disabled',true);
                         }
                     });
                 }
@@ -200,34 +269,67 @@
                     return false;
                 }
 
+            }
+            else{
+                alert('Salary of all employees are not generated');
+            }
+
         });
         $('#revert').click( function (e) {
             e.preventDefault();
-            var value2 = [];
+            var value = [];
             $("#add input[name=delete_check]:checked").each(function(){
-                row2 = $(this).closest("tr");
-                value2.push({
-                    emp_id :$(row2).find("input[name=employeeid]").val(),
-                    presentdays : $(row2).find("input[name=presentdays]").val(),
-                    clleave : $(row2).find("input[name=clleave]").val(),
-                    plleave : $(row2).find("input[name=plleave]").val(),
-                    lopleave : $(row2).find("input[name=lopleave]").val(),
-                    deduction : $(row2).find("select[name=deduction]").val(),
-                    salary : $(row2).find("input[name=salary]").val(),
-                    year_month : $(row2).find("input[name=year_month]").val(),
-                    holidaycount : $(row2).find("input[name=holidaycount]").val(),
+                row = $(this).closest("tr");
+                a = $(row).find('select[name=deduction]').val();
+                b = $(row).find("input[name=presentdays]").val();
+                c = $(row).find("input[name=clleave]").val();
+                f = $(row).find("input[name=plleave]").val();
+                h = $(row).find("input[name=salary]").val();
+                g = $(row).find("input[name=lopleave]").val();
+                i = $(row).find("input[name=holidaycount]").val();
+                if(a!=null){
+                    $(row).find('#ded').html(a +' '+'Days');
+                }
+                else{
+                    a = 0;
+                    $(row).find('#ded').html(a +' '+'Days');
+                }
+                salary_per_day = h/30;
+                actual_salary = salary_per_day * (parseInt(b)+parseInt(c)+ parseInt(f)+parseInt(i));
+                deducted_salary = salary_per_day * parseInt(a);
+                final_salary = actual_salary - deducted_salary;
+                value.push({
+                    emp_id :$(row).find("input[name=employeeid]").val(),
+                    presentdays : b,
+                    clleave :c,
+                    plleave : f,
+                    lopleave : g,
+                    deduction : a,
+                    salary : h,
+                    year_month : $(row).find("input[name=year_month]").val(),
                     department : $(row).find("input[name=department]").val(),
                     designation : $(row).find("input[name=designation]").val(),
+                    actual_salary :actual_salary.toFixed(2),
+                    deducted_salary : deducted_salary.toFixed(2),
+                    final_salary : final_salary.toFixed(2),
                     button_id : $("button[id=revert]").val()
                 });
+
+                if($('#input[name=status]').val() == null){
+                    $(row).find('#s1').html(actual_salary.toFixed(2)+' '+'/-');
+                    $(row).find('#s2').html(deducted_salary.toFixed(2)+' '+'/-');
+                    $(row).find('#s3').html(final_salary.toFixed(2)+' '+'/-');
+                }
+
             });
 
-            if(value2.length <= 0){
+
+            if(value.length <= 0){
                 alert('You have not selected');
             }
             else{
-                var x2 = confirm('Are you sure want to revert salary ?');
-                if(x2){
+                var x = confirm('Are you sure want to revert data ?');
+                if(x){
                     $.ajax({
                         headers: {
                             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -235,14 +337,57 @@
                         type: "POST",
                         url: $('#entriesSelected').data('route'),
                         contentType: 'application/json',
-                        data: JSON.stringify(value2),
+                        data: JSON.stringify(value),
                         success:function (html) {
-                            alert('Data reverted');
+                            alert('Salary reverted');
+                            $('#revert1').show();
+                            $('#confirm').show();
+                            $('#submit').show();
+                            $('#revert').hide();
+                            $('.delete_check').prop('checked',false);
+                            $('#salary tbody tr').each(function () {
+                                fs =  $(this).find('input[name=s3]').val();
+                                if(fs == 0){
+                                    arr.push({
+                                        'value' : 1
+                                    });
+                                }
+                                else{
+                                    arr.length = 0;
+                                }
+                            });
+                            console.log(arr.length);
                         }
                     });
                 }
                 else{
                     return false;
+                }
+            }
+        });
+
+        $('#revert1').click(function (e) {
+            e.preventDefault();
+            revert_empid = [];
+            $("#add input[name=delete_check]:checked").each(function(){
+                row4 = $(this).closest("tr");
+                $(row4).find('#ded').html('<select name="deduction"><option disabled selected>Deduction</option><?php for($i=1;$i<=31;$i++) echo '<option value="'.$i.'">'.$i.'</option>';?></select>');
+                $(row4).find('input[name=deduct]').hide();
+                $(row4).find('#s1').html('0/-');
+                $(row4).find('#s2').html('0/-');
+                $(row4).find('#s3').html('0/-');
+                revert_empid = $(row).find('input[name=employeeid]').val();
+            });
+            if(revert_empid.length <= 0){
+              alert('You have not selected');
+            }
+            else{
+                var m = confirm('Click ok to revert');
+                if(m){
+                    $('#revert').show();
+                    $('#submit').hide();
+                    $('#revert1').hide();
+                    $('#confirm').hide();
                 }
             }
         });

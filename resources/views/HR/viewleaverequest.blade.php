@@ -34,11 +34,11 @@
 @if(Session::has('message'))
     <script>alert("{{ Session::get('message') }}")</script>
     @endif
-<div  class="w3-card-4 w3-padding w3-animate-zoom item topnav"  >
-    <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium w3-light-gray w3-margin">
+<div  class=" w3-padding w3-animate-zoom item topnav"  >
+    <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium w3-margin" style="background-color: rgba(0,0,0,0.5)">
         <div class="table-responsive">
             <div class="w3-panel w3-border  w3-padding w3-border-gray w3-round-xlarge w3-center">
-                <strong style="color:black;font-size: 20px;">LEAVE REQUESTS</strong>
+                <strong style="color:white;font-size: 20px;">LEAVE REQUESTS</strong>
             </div>
             <table class="table w3-table-all w3-border w3-round w3-hoverable  data-table" width="100%">
                 <thead>
