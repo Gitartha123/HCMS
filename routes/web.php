@@ -117,5 +117,6 @@ Route::group(['middleware'=>'auth'],function(){
 
     Route::post('/empsalview','Payroll@EmpSalaryview')->name('empsalaryview');
     Route::get('/viewempsalary','Payroll@ViewEmpsalary')->name('viewempsalary');
+    Route::post('/saveholiday','Holiday@saveHoliday')->name('saveholiday');
 });
 

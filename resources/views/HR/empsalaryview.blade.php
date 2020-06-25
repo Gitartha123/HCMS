@@ -45,7 +45,7 @@
                                 <td>{{ $value->department }}</td>
                                 <td>{{ $value->designation }}</td>
                                 <td>
-                                   <a class="w3-green w3-hover w3-hover-red w3-button" href="viewempsalary?empno={{ $value->empno }}&department={{ $value->department }}&designation={{ $value->designation }}&name={{ $value->fname.' '.$value->mname.' '.$value->lname }}&joindate={{ $value->joindate }}&presentdays={{ $value->presentdays }}&clleave={{ $value->clleave }}&plleave={{ $value->plleave }}&lopleave={{ $value->lopleave }}&salary={{ $value->salary }}&actualsal={{ $value->actualsal }}&deductedsal={{ $value->deductedsal }}&empsalary={{ $value->empsalary }}&year_month={{ $value->year_month }}">Download</a>
+                                   <a style="text-decoration: none;" class="w3-green w3-hover w3-hover-red w3-button" href="viewempsalary?empno={{ $value->empno }}&department={{ $value->department }}&designation={{ $value->designation }}&name={{ $value->fname.' '.$value->mname.' '.$value->lname }}&joindate={{ $value->joindate }}&presentdays={{ $value->presentdays }}&clleave={{ $value->clleave }}&plleave={{ $value->plleave }}&lopleave={{ $value->lopleave }}&salary={{ $value->salary }}&actualsal={{ $value->actualsal }}&deductedsal={{ $value->deductedsal }}&empsalary={{ $value->empsalary }}&year_month={{ $value->year_month }}">Download</a>
                                 </td>
                             </tr>
                         @endforeach

@@ -1,88 +1,113 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-
     <title>Employee salary </title>
-
 </head>
+<style>
 
-<body>
+</style>
+<body style="max-height: 30%">
+@include('style')
 <div class="w3-row w3-center">
-
-    <h1 >Employee Salary of {{ $data['year_month'] }}</h1>
-
+    <h4 >Employee Salary of {{ date('F-Y',strtotime($data["year_month"])) }}</h4>
 </div>
 
 
 <p>
-<div class="w3-panel w3-center w3-border w3-margin"><h3>Employee Details</h3></div>
-<table class="w3-responsive w3-center">
-    <tr>
-        <td>Employee id :</td>
-        <td>{{ $data['empno'] }}</td>
-    </tr>
-    <tr>
-        <td>Employee name :</td>
-        <td>{{ $data['name']}}</td>
-    </tr>
-    <tr>
-        <td>Date of joining :</td>
-        <td>{{ $data['joindate'] }}</td>
-    </tr>
-    <tr>
-        <td>Department :</td>
-        <td>{{ $data['department'] }}</td>
-    </tr>
-    <tr>
-        <td>Designation :</td>
-        <td>{{ $data['designation'] }}</td>
-    </tr>
-</table>
+
+<div class="w3-panel w3-center w3-border "><h5>Employee Details</h5></div>
+<div class="w3-center w3-border w3-padding">
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Employee id :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['empno'] }}</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Employee name :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['name']}}</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Date of joining :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['joindate'] }}</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Department :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['department'] }}</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Designation :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['designation'] }}</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+</div>
 </p>
 
 <p>
-<div class="w3-panel w3-center w3-border"><h3>Attendance and leave Details</h3></div>
-<table class="w3-responsive w3-center">
-    <tr>
-        <td>Present Days :</td>
-        <td>{{ $data['presentdays']." " }}Days</td>
-    </tr>
-    <tr>
-        <td>Casual leave :</td>
-        <td>{{ $data['clleave']." " }}Days</td>
-    </tr>
-    <tr>
-        <td>Paid leave :</td>
-        <td>{{ $data['plleave']." " }}Days</td>
-    </tr>
-    <tr>
-        <td>Loss of pay leave :</td>
-        <td>{{ $data['lopleave']." " }}Days</td>
-    </tr>
-</table>
+<div class="w3-panel w3-center w3-border"><h5>Attendance and leave Details</h5></div>
+<div class="w3-padding w3-center w3-border">
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Present Days :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['presentdays']." " }}Days</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Casual leave :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['clleave']." " }}Days</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Paid leave :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['plleave']." " }}Days</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Loss of pay leave :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['lopleave']." " }}Days</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+</div>
 </p>
 
 <p>
-<div class="w3-panel w3-center w3-border"><h3>Salary Details</h3></div>
-<table class="w3-responsive w3-center">
-    <tr>
-        <td>Salary per month:</td>
-        <td>{{ $data['salary']." " }} Rs.</td>
-    </tr>
-    <tr>
-        <td>Salary by attendance :</td>
-        <td>{{ $data['actualsal']." " }} Rs.</td>
-    </tr>
-    <tr>
-        <td>Deduction :</td>
-        <td>{{ $data['deductedsal']." " }} Rs.</td>
-    </tr>
-    <tr>
-        <td>Final amount :</td>
-        <td>{{ $data['empsalary']." " }} Rs.</td>
-    </tr>
-</table>
+<div class="w3-panel w3-center w3-border"><h5>Salary Details</h5></div>
+<div class="w3-center w3-border w3-padding">
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Salary per month:</div>
+        <div class="w3-quarter w3-left-align">{{ $data['salary']." " }} Rs.</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Salary by attendance :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['actualsal']." " }} Rs.</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Deduction :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['deductedsal']." " }} Rs.</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+    <div class="w3-row">
+        <div class="w3-quarter">&nbsp;</div>
+        <div class="w3-quarter w3-left-align">Final amount :</div>
+        <div class="w3-quarter w3-left-align">{{ $data['empsalary']." " }} Rs.</div>
+        <div class="w3-quarter">&nbsp;</div>
+    </div>
+</div>
 </p>
 </body>
 

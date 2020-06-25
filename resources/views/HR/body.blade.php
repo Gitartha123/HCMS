@@ -8,7 +8,6 @@
         rotation: 45deg;
     }
 </style>
-
 <script src="public/js/photovalidation.js"></script>
 <div class="w3-card-4 w3-padding  w3-animate-zoom  item topnav w3-center" id="body"  style="background-image: url('{{ asset('resources/views/image/effective-employee-management.jpg') }}'); background-repeat: no-repeat;   background-size: auto;   background-position: center; height:100%;-webkit-background-size:cover;">
     <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium ">
@@ -26,9 +25,16 @@
                    </a>
                </div>
            </div>
-           <div class="w3-quarter w3-margin">
 
+           <div class="w3-quarter w3-margin">
+               <div class="w3-card-4 w3-round w3-padding zoom"; style="background-image: url('{{ asset('resources/views/image/index(1).png') }}');background-repeat: no-repeat;   background-size: auto;   background-position: center;height: 100px;-webkit-background-size:cover;">
+                   <a style="text-decoration: none; "onclick="document.getElementById('id05').style.display ='block'">
+                       <i class="w3-xxxlarge fa fa-plane" style="color: white"></i>
+                       <br><strong class="w3-margin" style="color:white">MANAGE HOLIDAY</strong>
+                   </a>
+               </div>
            </div>
+
            <div class="w3-quarter">
 
            </div>
@@ -72,6 +78,81 @@
                         </div>
                         <div class="w3-quarter">
 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="id05" class="w3-modal">
+    <div class="w3-modal-content">
+        <div class="w3-container">
+            <div class="w3-card-4 w3-padding  w3-animate-zoom  item topnav w3-center " id="body" style="background-color: rgba(0,0,0,0.5)">
+                <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium ">
+                      <span onclick="document.getElementById('id05').style.display='none'"
+                            class="w3-button w3-display-topright w3-red"><i class="fa fa-close"></i> </span>
+                    <div class="w3-row w3-row-padding w3-margin">
+                        <div class="w3-half">
+                            <div class="w3-card-4 w3-round w3-padding zoom"; style="background-color: #00CC66;height: 100px;">
+                                <a style="text-decoration: none; " onclick="document.getElementById('id06').style.display ='block'">
+                                    <i class="w3-xxxlarge fa fa-plus" style="color: white"></i>
+                                    <br><strong class="w3-margin" style="color:white">ADD HOLIDAY</strong>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="w3-half">
+                            <div class="w3-card-4 w3-round w3-padding zoom"; style="background-color: #00CC66;height: 100px;">
+                                <a style="text-decoration: none; " href="{{ url('viewrequest2') }}">
+                                    <i class="w3-xxxlarge fa fa-list" style="color: white"></i>
+                                    <br><strong class="w3-margin" style="color:white">VIEW HOLIDAY LIST</strong>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="w3-quarter">
+
+                        </div>
+                        <div class="w3-quarter">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="id06" class="w3-modal ">
+    <div class="w3-modal-content">
+        <div class="w3-container w3-center w3-margin" >
+            <div class="w3-card-4 w3-padding  w3-animate-zoom  item topnav w3-center w3-light-blue" id="body" style="max-width: 500px;">
+                <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium ">
+                      <span onclick="document.getElementById('id06').style.display='none'"
+                            class="w3-button w3-display-topright w3-red"><i class="fa fa-close"></i> </span>
+                    <div class="w3-row w3-row-padding w3-margin">
+                        <div class="w3-card-4 w3-round w3-padding"; style="background-color: #00CC66;">
+                            <form action="{{ route('saveholiday') }}" method="post">
+                                @csrf
+                                    <div class='input-group date' id='Date' name="dob">
+                                        <input type='text'  class="w3-input w3-border " placeholder="From" id="dob" name="from" autocomplete="off" >
+                                        <span class="input-group-addon ">
+                  <span class="glyphicon glyphicon-calendar "></span>
+              </span>
+                                    </div>
+                                <p></p>
+                                <div class='input-group date' id='Joindate'>
+                                    <input type='text' class="w3-input w3-border" id="joindate" name="to" placeholder="To" autocomplete="off">
+                                    <span class="input-group-addon ">
+                  <span class="glyphicon glyphicon-calendar "></span>
+              </span>
+                                </div>
+
+                                <p></p>
+                                <input type="text" class="w3-input" placeholder="Event" name="event">
+
+                                <p></p>
+                                <button type="submit" class="w3-btn w3-hover-red w3-round w3-light-blue">Submit</button>
+                            </form>
                         </div>
                     </div>
                 </div>

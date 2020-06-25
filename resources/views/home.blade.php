@@ -39,6 +39,9 @@
 @if(Session::has('salmessage'))
     <script>alert('{{ Session::get('salmessage') }}')</script>
     @endif
+    @if(Session::has('msg'))
+        <script>alert('{{ Session::get('msg') }}')</script>
+    @endif
 @include('HR.sidebar')
 @include('HR.body')
 
