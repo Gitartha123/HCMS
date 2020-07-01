@@ -60,6 +60,7 @@ Route::group(['middleware'=>'preventbackbutton'],function(){
 
     Route::post('/empsalview','Payroll@EmpSalaryview')->name('empsalaryview');
     Route::get('/viewempsalary','Payroll@ViewEmpsalary')->name('viewempsalary');
+    Route::get('/showholidaylist','Holiday@showHoliday');
 
 });
 
@@ -118,5 +119,7 @@ Route::group(['middleware'=>'auth'],function(){
     Route::post('/empsalview','Payroll@EmpSalaryview')->name('empsalaryview');
     Route::get('/viewempsalary','Payroll@ViewEmpsalary')->name('viewempsalary');
     Route::post('/saveholiday','Holiday@saveHoliday')->name('saveholiday');
+    Route::get('/showholidaylist','Holiday@showHoliday');
+    Route::get('/viewholiday','Holiday@deleteHoliday')->name('viewholiday');
 });
 

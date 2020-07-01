@@ -10,6 +10,7 @@
 </style>
 <script src="public/js/photovalidation.js"></script>
 <div class="w3-card-4 w3-padding  w3-animate-zoom  item topnav w3-center" id="body"  style="background-image: url('{{ asset('resources/views/image/effective-employee-management.jpg') }}'); background-repeat: no-repeat;   background-size: auto;   background-position: center; height:100%;-webkit-background-size:cover;">
+    @include('header')
     <div class="w3-card-4  w3-padding w3-border-aqua w3-round-medium ">
        <div class="w3-row w3-row-padding w3-margin">
            <div class="w3-quarter w3-margin">
@@ -103,7 +104,7 @@
                         </div>
                         <div class="w3-half">
                             <div class="w3-card-4 w3-round w3-padding zoom"; style="background-color: #00CC66;height: 100px;">
-                                <a style="text-decoration: none; " href="{{ url('viewrequest2') }}">
+                                <a style="text-decoration: none; " href="{{ url('showholidaylist') }}">
                                     <i class="w3-xxxlarge fa fa-list" style="color: white"></i>
                                     <br><strong class="w3-margin" style="color:white">VIEW HOLIDAY LIST</strong>
                                 </a>

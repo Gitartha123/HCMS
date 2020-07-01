@@ -32,7 +32,9 @@
     }
 </style>
 <body  style="background-image: linear-gradient(to right,black,black)">
+
 <div id="dashboard">
+
 @if(Session::has('message'))
     <script>alert('{{ Session::get('message') }}')</script>
     @endif
@@ -42,6 +44,10 @@
     @if(Session::has('msg'))
         <script>alert('{{ Session::get('msg') }}')</script>
     @endif
+    @if(Session::has('holidaydelete'))
+        <script>alert('{{ Session::get('holidaydelete') }}')</script>
+    @endif
+
 @include('HR.sidebar')
 @include('HR.body')
 
